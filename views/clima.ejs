@@ -133,41 +133,111 @@
             </div>
           </div>
            <!-- /State 0 END -->
+           <!-- /State 1 END -->
         <% } else {%>
-          <form>
+          <div class="row">
+            <div class="col-xl-3 col-sm-6 mb-3">
+              <form method="post" action="/clima">
+                <input type="hidden" name="state" value="0">
+                 <button type="submit" style="background: none; border: none;"><a href="#" class="btn btn-primary btn-lg">Regresar</a></button>
+            </form>
+            </div>
+          </div>
+          <form method="post" action="/clima_upload">
             <div class="form-row">
               <div class="col-xl-6 col-sm-12 mb-6">
                 <div class="form-group"><h4>Paso 1: Seleccionar escala de evaluación</h4></div>
                 <div class="form-group form-check form-check">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                  <label class="form-check-label" for="inlineRadio1">Escala 100-75-25-0</label>
+                  <input class="form-check-input" type="radio" name="escala_radio" id="escala-radio1" value="1" required>
+                  <label class="form-check-label" for="escala-radio1">Escala 100-75-25-0</label>
                 </div>
                 <div class="form-group form-check form-check">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                  <label class="form-check-label" for="inlineRadio2">Escala 100-80-40-0</label>
+                  <input class="form-check-input" type="radio" name="escala_radio" id="escala-radio2" value="2" required>
+                  <label class="form-check-label" for="escala-radio2">Escala 100-80-40-0</label>
                 </div>
               </div>
             </div>
             <br>
             <div class="form-row">
               <div class="col-xl-6 col-sm-12 mb-6">
-              <div class="form-group"><h4>Paso 2: Información de la empresa</h4></div>
-              <div class="form-group">
-                <label for="select-empresa">Seleccionar empresa: </label>
-                <select class="form-control" id="select-empresa">
-                  <option selected value="0">Matchpeople</option>
-                  <option value="1">Empresa Demo</option>
-                  <option value="2">ADS</option>
-                  <option value="3">CNH</option>
-                  <option value="4">John Deer</option>
-                </select>
-              </div>
-              <div class="form-group">
-                
+                <div class="form-group"><h4>Paso 2: Información de la empresa</h4></div>
+                <div class="form-group">
+                  <label for="select_empresa">Seleccionar empresa: </label>
+                  <select class="form-control" name="select_empresa" id="select_empresa" required>
+                    <option selected value="0">Matchpeople</option>
+                    <option value="1">Empresa Demo</option>
+                    <option value="2">ADS</option>
+                    <option value="3">CNH</option>
+                    <option value="4">John Deer</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="planta_input">Plantas (separadas por coma): </label>
+                  <input type="text" class="form-control" name="planta_input" id="planta_input" placeholder="E.g. Monterrey,San Pedro,etc..." required>
+                </div>
+                <div class="form-group">
+                  <label for="year_input">Año del estudio: </label>
+                  <input type="text" class="form-control" name="year_input" id="year_input" value="2019" required>
+                </div>
               </div>
             </div>
+            <br>
+            <div class="form-row">
+              <div class="col-xl-6 col-sm-12 mb-6">
+                <div class="form-group"><h4>Paso 3: Generales</h4></div>
+                <div class="form-group">
+                  <label for="generales_input">Categorías (separadas por coma, sin caracteres especiales): </label>
+                  <input type="text" class="form-control" name="generales_input" id="generales_input" placeholder="E.g. Genero,Edad,Antiguedad,etc" required>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="form-row">
+              <div class="col-xl-6 col-sm-12 mb-6">
+                <div class="form-group"><h4>Paso 4: Reactivos</h4></div>
+                <div class="form-group">
+                  <label for="reactivos_file">Archivo CSV (en este orden: Rubro, Factor, Reactivo)</label>
+                  <input type="file" class="form-control-file" name="reactivos_file" id="reactivos_file">
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="form-row">
+              <div class="col-xl-6 col-sm-12 mb-6">
+                <div class="form-group"><h4>Paso 5 (opcional): Servicios</h4></div>
+                <div class="form-check form-group">
+                  <input type="checkbox" class="form-check-input" name="servicios_check" id="servicios_check" value="0">
+                  <label class="form-check-label" for="servicios_check">Agregar Servicios?</label>
+                </div>
+                <div class="form-group">
+                  <label for="servicios_input">Servicios (separados por coma, sin caracteres especiales): </label>
+                  <input type="text" class="form-control" name="servicios_input" id="servicios_input" placeholder="E.g. RH,Compensaciones,etc" disabled>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="form-row">
+              <div class="col-xl-6 col-sm-12 mb-6">
+                <div class="form-group"><h4>Paso 6 (opcional): Comentarios y Otras Preguntas</h4></div>
+                <div class="form-check form-group">
+                  <input type="checkbox" class="form-check-input" name="comentarios_check" id="comentarios_check" value="0">
+                  <label class="form-check-label" for="comentarios_check">Agregar Comentarios?</label>
+                </div>
+                <div class="form-check form-group">
+                  <input type="checkbox" class="form-check-input" name="otras_check" id="otras_check" value="0">
+                  <label class="form-check-label" for="otras_check">Agregar Otras Preguntas?</label>
+                </div>
+                <div class="form-group">
+                  <label for="otras_input">Cantidad de otras preguntas: </label>
+                  <input type="number" class="form-control" name="otras_input" id="otras_input" disabled>
+                </div>
+              </div>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary btn-lg">Aceptar</button>
           </form>
         <% } %>
+        <!-- /State 1 END -->
 
       </div>
 
@@ -228,6 +298,16 @@
   <!-- Demo scripts for this page-->
   <script src="js/demo/datatables-demo.js"></script>
   <script src="js/demo/chart-area-demo.js"></script>
+
+  <script>
+    $('#servicios_check').change(function(){
+      $("#servicios_input").prop("disabled", !$(this).is(':checked'));
+    });
+
+    $('#otras_check').change(function(){
+      $("#otras_input").prop("disabled", !$(this).is(':checked'));
+    });
+  </script>
 
 </body>
 
