@@ -1,0 +1,15 @@
+{
+  "name": "suitemp",
+  "version": "1.0.0",
+  "description": "Suite Matchpeople",
+  "main": "index.ejs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "suitemp"
+  },
+  "author": "Carlos Ceniceros",
+  "license": "ISC"
+}
