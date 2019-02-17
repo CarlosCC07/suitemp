@@ -95,10 +95,10 @@
         <% if (state == 0) { %>
           <div class="row">
             <div class="col-xl-3 col-sm-6 mb-3">
-              <form method="post" action="/clima">
+              <form method="post" action="/clima" enctype="multipart/form-data">
                 <input type="hidden" name="state" value="1">
-                 <button type="submit" style="background: none; border: none;"><a href="#" class="btn btn-primary btn-lg"><i class="fas fa-fw fa-plus"></i>&nbsp;Nuevo Estudio</a></button>
-            </form>
+                <button type="submit" style="background: none; border: none;"><a href="#" class="btn btn-primary btn-lg"><i class="fas fa-fw fa-plus"></i>&nbsp;Nuevo Estudio</a></button>
+              </form>
             </div>
           </div>
 
@@ -119,14 +119,22 @@
                     </tr>
                   </thead>
                   <tbody>
+                    <% if (data.length > 0) {%>
+                      <% for (i = 0; i < data.length; i++) { %>
                     <tr>
-                      <td>ADS</td>
-                      <td>2017</td>
-                      <td>Jilotepec, Mérida, Mochis, Santa Catarina</td>
+                      <td><%= data[i].nombre %></td>
+                      <td><%= data[i].year %></td>
+                      <td><%= data[i].plantas %></td>
                       <td class="text-center"><a href="#" class="btn btn-success"><i class="fas fa-fw fa-check"></i></a></td>
                       <td class="text-center"><a href="#" class="btn btn-primary"><i class="fas fa-fw fa-edit"></i></a></td>
                       <td class="text-center"><a href="#" class="btn btn-danger"><i class="fas fa-fw fa-trash"></i></a></td>
                     </tr>
+                      <% } %>
+                    <% } else { %>
+                    <tr>
+                      <td>No hay estudios disponibles</td>
+                    </tr>
+                    <% } %>
                   </tbody>
                 </table>
               </div>
@@ -134,16 +142,16 @@
           </div>
            <!-- /State 0 END -->
            <!-- /State 1 END -->
-        <% } else {%>
+        <% } else if (state == 1) {%>
           <div class="row">
             <div class="col-xl-3 col-sm-6 mb-3">
-              <form method="post" action="/clima">
+              <form method="post" action="/clima" enctype="multipart/form-data">
                 <input type="hidden" name="state" value="0">
-                 <button type="submit" style="background: none; border: none;"><a href="#" class="btn btn-primary btn-lg">Regresar</a></button>
+                <button type="submit" style="background: none; border: none;"><a href="#" class="btn btn-primary btn-lg">Regresar</a></button>
             </form>
             </div>
           </div>
-          <form method="post" action="/clima_upload">
+          <form method="post" action="/clima" enctype="multipart/form-data">
             <div class="form-row">
               <div class="col-xl-6 col-sm-12 mb-6">
                 <div class="form-group"><h4>Paso 1: Seleccionar escala de evaluación</h4></div>
@@ -186,7 +194,7 @@
               <div class="col-xl-6 col-sm-12 mb-6">
                 <div class="form-group"><h4>Paso 3: Generales</h4></div>
                 <div class="form-group">
-                  <label for="generales_input">Categorías (separadas por coma, sin caracteres especiales): </label>
+                  <label for="generales_input">Categorías (separadas por coma, sin caracteres especiales, iniciando con Planta): </label>
                   <input type="text" class="form-control" name="generales_input" id="generales_input" placeholder="E.g. Genero,Edad,Antiguedad,etc" required>
                 </div>
               </div>
@@ -196,8 +204,12 @@
               <div class="col-xl-6 col-sm-12 mb-6">
                 <div class="form-group"><h4>Paso 4: Reactivos</h4></div>
                 <div class="form-group">
-                  <label for="reactivos_file">Archivo CSV (en este orden: Rubro, Factor, Reactivo)</label>
+                  <label for="reactivos_file">Archivo CSV Reactivos (en este orden: Rubro, Factor, Reactivo)</label>
                   <input type="file" class="form-control-file" name="reactivos_file" id="reactivos_file">
+                </div>
+                <div class="form-group">
+                  <label for="reactivos_input">Número de Reactivos: </label>
+                  <input type="number" class="form-control" name="reactivos_input" id="reactivos_input" required>
                 </div>
               </div>
             </div>
@@ -231,14 +243,37 @@
                   <label for="otras_input">Cantidad de otras preguntas: </label>
                   <input type="number" class="form-control" name="otras_input" id="otras_input" disabled>
                 </div>
+                <div class="form-group">
+                  <label for="otras_input">Archivo de otras preguntas (ignorar si no hay otras preguntas): </label>
+                  <input type="file" class="form-control-file" name="reactivos_file" id="otras_input">
+                </div>
               </div>
             </div>
             <br>
+            <div class="form-row">
+              <div class="col-xl-6 col-sm-12 mb-6">
+                <div class="form-group"><h4>Paso 7: Resultado de Encuesta </h4></div>
+                <div class="form-group">
+                  <label for="reactivos_file">Archivo CSV Global</label>
+                  <input type="file" class="form-control-file" name="reactivos_file" id="reactivos_file">
+                </div>
+              </div>
+            </div>
+            <br>
+            <input type="hidden" name="state" value="2">
             <button type="submit" class="btn btn-primary btn-lg">Aceptar</button>
           </form>
-        <% } %>
         <!-- /State 1 END -->
-
+        <% } else { %>
+        <form method="get" action="/clima">
+          <div class="form-row">
+            <div class="col-xl-6 col-sm-12 mb-6">
+              <div class="form-group"><h4>Estudio generado con éxito!</h4></div>
+              <button type="submit" style="background: none; border: none;"><a href="#" class="btn btn-primary btn-lg">Regresar</a></button>
+            </div>
+          </div>
+        </form>
+        <% } %>
       </div>
 
       <!-- Sticky Footer -->
