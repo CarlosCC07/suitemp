@@ -113,6 +113,7 @@
                       <th>Empresa</th>
                       <th>Año</th>
                       <th>Plantas</th>
+                      <th>Escala</th>
                       <th>Ver Resultados</th>
                       <th>Editar Estudio</th>
                       <th>Eliminar Estudio</th>
@@ -125,6 +126,11 @@
                       <td><%= data[i].nombre %></td>
                       <td><%= data[i].year %></td>
                       <td><%= data[i].plantas %></td>
+                      <% if (data[i].escala == 1) { %>
+                      <td>100-75-25-0</td>
+                      <% } else { %>
+                      <td>100-80-40-0</td>
+                      <% } %>
                       <td class="text-center"><a href="#" class="btn btn-success"><i class="fas fa-fw fa-check"></i></a></td>
                       <td class="text-center"><a href="#" class="btn btn-primary"><i class="fas fa-fw fa-edit"></i></a></td>
                       <td class="text-center"><a href="#" class="btn btn-danger"><i class="fas fa-fw fa-trash"></i></a></td>
@@ -172,11 +178,10 @@
                 <div class="form-group">
                   <label for="select_empresa">Seleccionar empresa: </label>
                   <select class="form-control" name="select_empresa" id="select_empresa" required>
-                    <option selected value="Matchpeople">Matchpeople</option>
-                    <option value="Empresa Demo">Empresa Demo</option>
-                    <option value="ADS">ADS</option>
-                    <option value="CNH">CNH</option>
-                    <option value="John Deer">John Deer</option>
+                    <% for (i = 0; i < data.length; i++) { %>
+                    <option value="<%= data[i].nombre %>"><%= data[i].nombre %></option>
+                    <input type="hidden" name="id_empresa" value="<%= data[i].id %>">
+                    <% } %>
                   </select>
                 </div>
                 <div class="form-group">

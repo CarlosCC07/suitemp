@@ -40,7 +40,7 @@ con.connect()
 // *************************************************************************************
 function create_tables(dbname, se, ce, oe) {
   
-  var sql_table_empresa = "CREATE TABLE empresa (id INT AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(255), year INT, escala INT)";
+  var sql_table_empresa = "CREATE TABLE empresa (id INT PRIMARY KEY, nombre VARCHAR(255), year INT, escala INT)";
   con.query(sql_table_empresa, function (err, result) {
     if (err) throw err;
     // console.log("Table empresa created successfully");
@@ -248,6 +248,40 @@ app.get('/', function (req, res) {
   res.render('index');
 })
 
+app.get('/empresas', function (req, res) {
+  con.query("SELECT * FROM empresas", function (err, result, fields) {
+    if (err) throw err;
+    let state = 0;
+    let crumb = 'Empresas';
+    let data = result;
+    res.render('empresas', {state, crumb, data});
+  });
+})
+
+app.post('/empresas', upload.none(), function (req, res) {
+  state = parseInt(req.body.state);
+  if (state == 1) { 
+    let crumb = 'Registrar Empresas';
+    res.render('empresas', {state, crumb});
+  } else if (state == 2) {
+    let nombre = req.body.nombre_input;
+    let giro = req.body.giro_input;
+
+    var sql_insert_empresa = "INSERT INTO empresas (nombre, giro) VALUES ('" + nombre + "', '" + giro + "')";
+    con.query(sql_insert_empresa, function (err, result) {
+      if (err) throw err;
+    });
+
+    let crumb = 'Registrar Empresas';
+    res.render('empresas', {state, crumb});
+  }
+})
+
+app.get('/usuarios', function (req, res) {
+  let crumb = 'Usuarios';
+  res.render('usuarios', {crumb});
+})
+
 app.get('/clima', function (req, res) {
   con.changeUser({database : "suitemp"}, function(err) {
       if (err) throw err;
@@ -273,13 +307,17 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
       res.render('clima', {state, crumb, data});
     });
   } else if (state == 1) {
+    con.query("SELECT * FROM empresas", function (err, result, fields) {
+      if (err) throw err;
       let state = 1;
       let crumb = 'Nuevo Estudio';
-      // let data = result;
-      res.render('clima', {state, crumb});
+      let data = result;
+      res.render('clima', {state, crumb, data});
+    });
   } else if (state == 2) {
     let escala = parseInt(req.body.escala_radio);
-    let empresa = req.body.select_empresa; // This will be modified to work with ID value instead of name
+    let empresa = req.body.select_empresa;
+    let empresa_id = parseInt(req.body.id_empresa);
     let planta = req.body.planta_input;
     let year = parseInt(req.body.year_input);
     let generales = req.body.generales_input;
@@ -290,7 +328,7 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
     let servicios = req.body.servicios_input;
     let otras = parseInt(req.body.otras_input);
 
-    var sql_insert_analisis = "INSERT INTO clima (nombre, year, plantas) VALUES ('" + empresa + "', " + year + ", '" + planta + "')";
+    var sql_insert_analisis = "INSERT INTO clima (empresa_id, nombre, year, plantas, escala) VALUES (" + empresa_id + ", '" + empresa + "', " + year + ", '" + planta + "', " + escala + ")";
     con.query(sql_insert_analisis, function (err, result) {
       if (err) throw err;
     });
@@ -314,7 +352,7 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
     var arr_generales = generales.split(",");
     var arr_servicios = servicios.split(",");
 
-    var sql_insert_empresa = "INSERT INTO empresa (nombre, year, escala) VALUES ('" + empresa + "', " + year + ", " + escala + ")";
+    var sql_insert_empresa = "INSERT INTO empresa (id, nombre, year, escala) VALUES (" + empresa_id + ", '" + empresa + "', " + year + ", " + escala + ")";
     con.query(sql_insert_empresa, function (err, result) {
       if (err) throw err;
     });
