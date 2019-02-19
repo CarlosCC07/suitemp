@@ -4,7 +4,7 @@
 
 const express = require('express');
 const app = express()
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
 // File Reader dependencies
 // var util = require("util");
@@ -22,7 +22,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 
 app.use(express.static('public'));
-// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
 // MySQL Connection
@@ -38,9 +38,10 @@ con.connect()
 // *************************************************************************************
 // FUNCTION DECLARATIONS
 // *************************************************************************************
+
 function create_tables(dbname, se, ce, oe) {
   
-  var sql_table_empresa = "CREATE TABLE empresa (id INT PRIMARY KEY, nombre VARCHAR(255), year INT, escala INT)";
+  var sql_table_empresa = "CREATE TABLE empresa (id INT PRIMARY KEY, nombre VARCHAR(255), year INT, escala INT, num_reactivos INT, num_generales INT, num_servicios INT, comentarios INT, num_otras INT)";
   con.query(sql_table_empresa, function (err, result) {
     if (err) throw err;
     // console.log("Table empresa created successfully");
@@ -137,44 +138,51 @@ function parse_otras() {
  }, false);
 }
 
-function parse_global(ng, nr, ns, nc, no, escala) {
+function parse_global(nr, escala) {
   csv.parseCSV("./uploads/global.csv", function(data){
+   // console.log(JSON.stringify(data));
+   for (i = 0; i < data.length; i++) {
+     for (j = 0; j < nr; j++) {
+        t = j+1;
+        let resp  = 0;
+        if (escala == 2) {
+          if (data[i][t] == "Totalmente de acuerdo") {
+            resp = 100;
+          } else if (data[i][t] == "De acuerdo") {
+            resp = 80;
+          } else if (data[i][t] == "En desacuerdo") {
+            resp = 40;
+          } else if (data[i][t] == "Totalmente en desacuerdo") {
+            resp = 0;
+          } 
+        } else {
+          if (data[i][t] == "Totalmente de acuerdo") {
+            resp = 100;
+          } else if (data[i][t] == "De acuerdo") {
+            resp = 75;
+          } else if (data[i][t] == "En desacuerdo") {
+            resp = 25;
+          } else if (data[i][t] == "Totalmente en desacuerdo") {
+            resp = 0;
+          } 
+        }
+        var sql_data = "INSERT INTO global (folio_id, reactivo_id, respuesta) VALUES (" + data[i][0] + ", " + t + ", " + resp + ")";
+        con.query(sql_data, function (err, result) {
+          if (err) throw err;
+        });
+      }    
+   }
+ }, false);
+}
+
+function parse_generales(ng, ns, nc, no, escala) {
+  csv.parseCSV("./uploads/generales.csv", function(data){
    // console.log(JSON.stringify(data));
    for (i = 0; i < data.length; i++) {
     let k = 1;
     for (j = 0; j < ng; j++) {
       t = j+1;
       var sql_data = "INSERT INTO generales_respuestas (folio_id, general_id, respuesta) VALUES (" + data[i][0] + ", " + t + ", '" + data[i][k] + "')";
-      con.query(sql_data, function (err, result) {
-        if (err) throw err;
-      });
-      k++;
-    }
-    for (j = 0; j < nr; j++) {
-      t = j+1;
-      let resp  = 0;
-      if (escala == 2) {
-        if (data[i][k] == "Totalmente de acuerdo") {
-          resp = 100;
-        } else if (data[i][k] == "De acuerdo") {
-          resp = 80;
-        } else if (data[i][k] == "En desacuerdo") {
-          resp = 40;
-        } else if (data[i][k] == "Totalmente en desacuerdo") {
-          resp = 0;
-        } 
-      } else {
-        if (data[i][k] == "Totalmente de acuerdo") {
-          resp = 100;
-        } else if (data[i][k] == "De acuerdo") {
-          resp = 75;
-        } else if (data[i][k] == "En desacuerdo") {
-          resp = 25;
-        } else if (data[i][k] == "Totalmente en desacuerdo") {
-          resp = 0;
-        } 
-      }
-      var sql_data = "INSERT INTO global (folio_id, reactivo_id, respuesta) VALUES (" + data[i][0] + ", " + t + ", " + resp + ")";
       con.query(sql_data, function (err, result) {
         if (err) throw err;
       });
@@ -282,6 +290,42 @@ app.get('/usuarios', function (req, res) {
   res.render('usuarios', {crumb});
 })
 
+app.get('/editar_clima', function (req, res) {
+  dbname = req.query.dbname;
+  con.changeUser({database : dbname}, function(err) {
+      if (err) throw err;
+      console.log('Changed to DB ' + dbname)
+  });
+  let state = 0;
+  let crumb = 'Editar Estudio';
+  res.render('editar_clima', {state, crumb});
+})
+
+app.post('/editar_clima', upload.array('reactivos_file'), function (req, res) {
+  state = req.body.state;
+  if (state == 1) {
+    let crumb = 'Editar Estudio';
+    res.render('editar_clima', {state, crumb});
+  } else if (state == 2) {
+    var data = [];
+    con.query("SELECT * FROM empresa", function (err, result, fields) {
+      if(err) {
+        throw err;
+      } else {
+        setValue(result);
+      }
+    });
+    function setValue(value) {
+      data = value;
+      // console.log(data[0].num_reactivos);
+      // parse_global(data[0].num_reactivos, data[0].escala, function(err, result)  { if (err) throw err; });
+      parse_generales(data[0].num_generales, data[0].num_servicios, data[0].comentarios, data[0].num_otras, data[0].escala, function(err, result)  { if (err) throw err; });
+      let crumb = 'Editar Estudio';
+      res.render('editar_clima', {state, crumb});
+    }
+  }
+})
+
 app.get('/clima', function (req, res) {
   con.changeUser({database : "suitemp"}, function(err) {
       if (err) throw err;
@@ -316,8 +360,7 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
     });
   } else if (state == 2) {
     let escala = parseInt(req.body.escala_radio);
-    let empresa = req.body.select_empresa;
-    let empresa_id = parseInt(req.body.id_empresa);
+    let arr_empresa = req.body.select_empresa.split(",");
     let planta = req.body.planta_input;
     let year = parseInt(req.body.year_input);
     let generales = req.body.generales_input;
@@ -325,8 +368,11 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
     let servicios_enabled = parseInt(req.body.servicios_check);
     let comentarios_enabled = parseInt(req.body.comentarios_check);
     let otras_enabled = parseInt(req.body.otras_check);
-    let servicios = req.body.servicios_input;
+    let arr_servicios = req.body.servicios_input.split(",");
     let otras = parseInt(req.body.otras_input);
+
+    let empresa = arr_empresa[0];
+    let empresa_id = parseInt(arr_empresa[1]);
 
     var sql_insert_analisis = "INSERT INTO clima (empresa_id, nombre, year, plantas, escala) VALUES (" + empresa_id + ", '" + empresa + "', " + year + ", '" + planta + "', " + escala + ")";
     con.query(sql_insert_analisis, function (err, result) {
@@ -350,9 +396,16 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
 
     var arr_plantas = planta.split(",");
     var arr_generales = generales.split(",");
-    var arr_servicios = servicios.split(",");
+    
+    let cv = 0;
 
-    var sql_insert_empresa = "INSERT INTO empresa (id, nombre, year, escala) VALUES (" + empresa_id + ", '" + empresa + "', " + year + ", " + escala + ")";
+    if (comentarios_enabled == 0) {
+      cv = 1;
+    }
+
+    // MISSING CASE CHECK IF OTRAS OR SERVICIOS ARE EMPTY
+
+    var sql_insert_empresa = "INSERT INTO empresa (id, nombre, year, escala, num_reactivos, num_generales, num_servicios, comentarios, num_otras) VALUES (" + empresa_id + ", '" + empresa + "', " + year + ", " + escala + ", " + num_reactivos + ", " + arr_generales.length + ", " + arr_servicios.length + ", " + cv + ", " + otras + ")";
     con.query(sql_insert_empresa, function (err, result) {
       if (err) throw err;
     });
@@ -382,8 +435,10 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
 
     parse_reactivos(function(err, result)  { if (err) throw err; });
 
-    parse_global(arr_generales.length, num_reactivos, arr_servicios.length, comentarios_enabled, otras, escala, function(err, result)  { if (err) throw err; });
-
+    parse_global(num_reactivos, escala, function(err, result)  { if (err) throw err; });
+    
+    parse_generales(arr_generales.length, arr_servicios.length, comentarios_enabled, otras, escala, function(err, result)  { if (err) throw err; });
+    
     if (otras > 0) {
       parse_otras(function(err, result)  { if (err) throw err; });
     }
