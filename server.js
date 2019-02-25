@@ -448,6 +448,63 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
   }
 })
 
+app.get('/resultados_clima', function (req, res) {
+  dbname = req.query.dbname;
+  if (dbname != 'undefined') {
+    con.changeUser({database : dbname}, function(err) {
+      if (err) throw err;
+      // console.log('Changed to DB ' + dbname)
+    });
+  }
+  let state = 0;
+  let crumb = 'Resultados ' + dbname;
+  res.render('resultados_clima', {state, crumb});
+})
+
+app.post('/resultados_clima', function (req, res) {
+  state = req.body.state;
+  dbname = req.body.dbname;
+  
+  if (state == 0) {
+    let crumb = 'Resultados ' + dbname;
+    res.render('resultados_clima', {state, crumb});
+  } else if (state == 1) {
+    con.query("SELECT rubro, AVG(respuesta) AS avg_respuesta FROM `reactivos` INNER JOIN `global` WHERE reactivos.id = global.reactivo_id GROUP BY rubro ORDER BY avg_respuesta DESC", function (err, result, fields) {
+      if (err) throw err;
+      let data = result;
+      let crumb = 'Resultados ' + dbname;
+      res.render('resultados_clima', {state, crumb, data});
+    });
+  } else if (state == 2) {
+    con.query("SELECT rubro, factor, AVG(respuesta) AS avg_respuesta FROM `reactivos` INNER JOIN `global` WHERE reactivos.id = global.reactivo_id GROUP BY factor", function (err, result, fields) {
+      if (err) throw err;
+      let data = result;
+      let crumb = 'Resultados ' + dbname;
+      res.render('resultados_clima', {state, crumb, data});
+    });
+  } else if (state == 3) {
+    var sql1 = "SELECT rubro, COUNT(respuesta) AS ct_respuesta FROM `reactivos` INNER JOIN `global` WHERE reactivos.id = global.reactivo_id AND respuesta = 100 GROUP BY rubro";
+    var sql2 = "SELECT rubro, COUNT(respuesta) AS ct_respuesta FROM `reactivos` INNER JOIN `global` WHERE reactivos.id = global.reactivo_id AND respuesta = 75 OR respuesta = 80 GROUP BY rubro";
+    var sql3 = "SELECT rubro, COUNT(respuesta) AS ct_respuesta FROM `reactivos` INNER JOIN `global` WHERE reactivos.id = global.reactivo_id AND respuesta = 25 OR respuesta = 40 GROUP BY rubro";
+    var sql4 = "SELECT rubro, COUNT(respuesta) AS ct_respuesta FROM `reactivos` INNER JOIN `global` WHERE reactivos.id = global.reactivo_id AND respuesta = 0 GROUP BY rubro";
+
+    con.query(sql1, function (err, data1, fields) {
+      if (err) throw err;
+      con.query(sql2, function (err, data2, fields) {
+        if (err) throw err;
+        con.query(sql3, function (err, data3, fields) {
+          if (err) throw err;
+          con.query(sql4, function (err, data4, fields) {
+            if (err) throw err;
+            let crumb = 'Resultados ' + dbname;
+            res.render('resultados_prop', {state, crumb, data1, data2, data3, data4});     
+          });
+        });
+      });
+    });
+  }
+})
+
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
 })
