@@ -502,6 +502,69 @@ app.post('/resultados_clima', function (req, res) {
         });
       });
     });
+  } else if (state == 4) {
+    con.query("SELECT servicio, AVG(respuesta) AS avg_respuesta FROM `servicios` INNER JOIN `servicios_respuestas` WHERE servicios.id = servicios_respuestas.servicio_id AND respuesta >= 0 GROUP BY servicio", function (err, result, fields) {
+      if (err) throw err;
+      let data = result;
+      let crumb = 'Resultados ' + dbname;
+      res.render('resultados_clima', {state, crumb, data});
+    });
+  } else if (state == 5) {
+    var sql1 = "SELECT id, nombre, respuesta, COUNT(respuesta) AS hcount FROM `generales` INNER JOIN generales_respuestas WHERE generales.id = generales_respuestas.general_id GROUP BY id, respuesta";
+    var sql2 = "SELECT a.id, a.nombre, b.respuesta AS g_resp, AVG(c.respuesta) AS avg_resp FROM generales AS a INNER JOIN generales_respuestas AS b INNER JOIN global AS c WHERE a.id = b.general_id AND b.folio_id = c.folio_id GROUP BY id, g_resp";
+    var sql3 = "SELECT d.rubro, a.id, a.nombre, b.respuesta AS g_resp, AVG(c.respuesta) AS avg_resp FROM generales AS a INNER JOIN generales_respuestas AS b INNER JOIN global AS c INNER JOIN reactivos AS d WHERE a.id = b.general_id AND b.folio_id = c.folio_id AND c.reactivo_id = d.id GROUP BY rubro, id, g_resp";
+    var sql4 = "SELECT * FROM generales";
+
+    con.query(sql1, function (err, data1, fields) {
+      if (err) throw err;
+      con.query(sql2, function (err, data2, fields) {
+        if (err) throw err;
+        con.query(sql3, function (err, data3, fields) {
+          if (err) throw err;
+          con.query(sql4, function (err, data4, fields) {
+            if (err) throw err;
+            let crumb = 'Resultados ' + dbname;
+            res.render('resultados_clima', {state, crumb, data1, data2, data3, data4});     
+          });
+        });
+      });
+    });
+  } else if (state == 6) {
+    var sql1 = "SELECT id, rubro, factor, reactivo, AVG(respuesta) AS avg_respuesta FROM reactivos INNER JOIN global WHERE reactivos.id = global.reactivo_id GROUP BY id ORDER BY avg_respuesta DESC";
+    var sql2 = "SELECT id, rubro, factor, reactivo, AVG(respuesta) AS avg_respuesta FROM `reactivos` INNER JOIN `global` WHERE reactivos.id = global.reactivo_id GROUP BY id ORDER BY avg_respuesta DESC LIMIT 10";
+    var sql3 = "SELECT id, rubro, factor, reactivo, AVG(respuesta) AS avg_respuesta FROM `reactivos` INNER JOIN `global` WHERE reactivos.id = global.reactivo_id GROUP BY id ORDER BY avg_respuesta ASC LIMIT 10";
+
+    con.query(sql1, function (err, data1, fields) {
+      if (err) throw err;
+      con.query(sql2, function (err, data2, fields) {
+        if (err) throw err;
+        con.query(sql3, function (err, data3, fields) {
+          if (err) throw err;
+          let crumb = 'Resultados ' + dbname;
+          res.render('resultados_clima', {state, crumb, data1, data2, data3});
+        });
+      });
+    });
+  } else if (state == 7) {
+    var sql = "SELECT * FROM comentarios WHERE comentario <> ''";
+    con.query(sql, function (err, result, fields) {
+      if (err) throw err;
+      let data = result;
+      let crumb = 'Resultados ' + dbname;
+      res.render('resultados_clima', {state, crumb, data});
+    });
+  } else if (state == 8) {
+    var sql1 = "SELECT * FROM otras_preguntas";
+    var sql2 = "SELECT * FROM otras_respuestas WHERE respuesta <> ''";
+    
+    con.query(sql1, function (err, data1, fields) {
+      if (err) throw err;
+      con.query(sql2, function (err, data2, fields) {
+        if (err) throw err;
+        let crumb = 'Resultados ' + dbname;
+        res.render('resultados_clima', {state, crumb, data1, data2});
+      });
+    });
   }
 })
 
