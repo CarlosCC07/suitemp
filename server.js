@@ -30,7 +30,7 @@ var mysql = require('mysql')
 var con = mysql.createConnection({
   host     : 'localhost',
   user     : 'carlos',
-  password : 'brisa_2019'
+  password : 'brisa'
 });
 
 con.connect()
@@ -248,8 +248,44 @@ function parse_generales(ng, ns, nc, no, escala) {
 // *************************************************************************************
 // ROUTE DEFINITIONS
 // *************************************************************************************
+/*
+app.get('/', function (req, res) {
+  con.changeUser({database : "suitemp"}, function(err) {
+      if (err) throw err;
+    });
+  res.render('index');
+})
+*/
 
 app.get('/', function (req, res) {
+  con.changeUser({database : "suitemp"}, function(err) {
+      if (err) throw err;
+    });
+  res.render('login');
+})
+
+app.post('/', function (req, res) {
+  state = parseInt(req.body.state);
+  user = req.body.inputUser;
+  pswd = req.body.inputPassword;
+
+  let user_query = "SELECT username, password FROM `usuarios` WHERE username = '" + user + "';";
+  con.query(user_query, function (err, result, fields) {
+      if (err) throw err;
+      let data = result;
+      if (pswd != data[0].password) {
+        state = 0;
+      }
+      if (state == 1) {
+        console.log('Username: ' + user)
+        res.render('index');
+      } else {
+        res.render('login', {state});
+      }
+    });
+})
+
+app.get('/home', function (req, res) {
   con.changeUser({database : "suitemp"}, function(err) {
       if (err) throw err;
     });
@@ -286,8 +322,33 @@ app.post('/empresas', upload.none(), function (req, res) {
 })
 
 app.get('/usuarios', function (req, res) {
-  let crumb = 'Usuarios';
-  res.render('usuarios', {crumb});
+  con.query("SELECT * FROM usuarios", function (err, result, fields) {
+    if (err) throw err;
+    let state = 0;
+    let crumb = 'Usuarios';
+    let data = result;
+    res.render('usuarios', {state, crumb, data});
+  });
+})
+
+app.post('/usuarios', upload.none(), function (req, res) {
+  state = parseInt(req.body.state);
+  if (state == 1) { 
+    let crumb = 'Registrar Usuarios';
+    res.render('usuarios', {state, crumb});
+  } else if (state == 2) {
+    let username = req.body.username_input;
+    let password = req.body.password_input;
+    let type = req.body.type_input;
+
+    var sql_insert_usuario = "INSERT INTO usuarios (username, password, type) VALUES ('" + username + "', '" + password + "', '" + type + "')";
+    con.query(sql_insert_usuario, function (err, result) {
+      if (err) throw err;
+    });
+
+    let crumb = 'Registrar Usuarios';
+    res.render('usuarios', {state, crumb});
+  }
 })
 
 app.get('/editar_clima', function (req, res) {

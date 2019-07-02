@@ -26,7 +26,7 @@
 
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-    <a class="navbar-brand mr-1" href="/">Suite Matchpeople</a>
+    <a class="navbar-brand mr-1" href="/home">Suite Matchpeople</a>
 
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
       <i class="fas fa-bars"></i>
@@ -51,7 +51,7 @@
     <!-- Sidebar -->
     <ul class="sidebar navbar-nav">
       <li class="nav-item active">
-        <a class="nav-link" href="/">
+        <a class="nav-link" href="/home">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Resumen</span>
         </a>
@@ -91,13 +91,97 @@
           <li class="breadcrumb-item active"><%= crumb %></li>
         </ol>
 
+        <% if (state == 0) { %>
+
         <div class="row">
           <div class="col-xl-3 col-sm-6 mb-3">
-            <form method="get" action="/">
-              <button type="submit" style="background: none; border: none;"><a href="#" class="btn btn-primary btn-lg">Regresar</a></button>
+            <form method="get" action="/home">
+              <button type="submit" style="background: none; border: none;"><a style="color: white;" class="btn btn-primary btn-lg">Regresar</a></button>
           </form>
           </div>
-        </div>        
+          <div class="col-xl-3 col-sm-6 mb-3">
+              <form method="post" action="/usuarios" enctype="multipart/form-data">
+                <input type="hidden" name="state" value="1">
+                <button type="submit" style="background: none; border: none;"><a style="color: white;" class="btn btn-primary btn-lg"><i class="fas fa-fw fa-plus"></i>&nbsp;Registrar Usuario</a></button>
+              </form>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+              Usuarios</div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Accesos</th>
+                      <th>Eliminar Usuario</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if (data.length > 0) {%>
+                      <% for (i = 0; i < data.length; i++) { %>
+                    <tr>
+                      <td><%= data[i].username %></td>
+                      <td><%= data[i].type %></td>
+                      <td class="text-center"><a href="#" class="btn btn-danger"><i class="fas fa-fw fa-trash"></i></a></td>
+                    </tr>
+                      <% } %>
+                    <% } else { %>
+                    <tr>
+                      <td>No hay usuarios disponibles</td>
+                    </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <% } else if (state == 1) { %>
+          <div class="row">
+            <div class="col-xl-3 col-sm-6 mb-3">
+              <form method="get" action="/usuarios">
+                <button type="submit" style="background: none; border: none;"><a style="color: white;" class="btn btn-primary btn-lg">Regresar</a></button>
+            </form>
+            </div>
+          </div>
+
+          <form method="post" action="/usuarios" enctype="multipart/form-data">
+            <div class="form-row">
+              <div class="col-xl-6 col-sm-12 mb-6">
+                <div class="form-group"><h4>Nuevo Usuario</h4></div>
+                <div class="form-group">
+                  <label for="username_input">Nombre de Usuario: </label>
+                  <input type="text" class="form-control" name="username_input" id="username_input" required>
+                </div>
+                <div class="form-group">
+                  <label for="password_input">Contraseña: </label>
+                  <input type="text" class="form-control" name="password_input" id="password_input" required>
+                </div>
+                <div class="form-group">
+                  <label for="type_input">Accesos: </label>
+                  <input type="number" class="form-control" name="type_input" id="type_input" required>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="state" value="2">
+            <button type="submit" class="btn btn-primary btn-lg">Aceptar</button>
+          </form>
+
+          <% } else { %>
+          <form method="get" action="/usuarios">
+          <div class="form-row">
+            <div class="col-xl-6 col-sm-12 mb-6">
+              <div class="form-group"><h4>Usuario registrado exitosamente!</h4></div>
+              <button type="submit" style="background: none; border: none;"><a style="color: white;" class="btn btn-primary btn-lg">Regresar</a></button>
+            </div>
+          </div>
+        </form>
+          <% } %>
+
       </div>
 
       <!-- Sticky Footer -->
@@ -133,7 +217,7 @@
         <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login.ejs">Logout</a>
+          <a class="btn btn-primary" href="/">Logout</a>
         </div>
       </div>
     </div>
