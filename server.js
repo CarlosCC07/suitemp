@@ -352,7 +352,7 @@ app.post('/usuarios', upload.none(), function (req, res) {
 })
 
 app.get('/editar_clima', function (req, res) {
-  dbname = "_" + req.query.dbname;
+  dbname = req.query.dbname;
   con.changeUser({database : dbname}, function(err) {
       if (err) throw err;
       console.log('Changed to DB ' + dbname)
@@ -440,7 +440,7 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
       if (err) throw err;
     });
 
-    let dbname = "_" + empresa + year;
+    let dbname = empresa + year;
     let db_query = "CREATE DATABASE IF NOT EXISTS " + dbname + " COLLATE utf8_general_ci";
     con.query(db_query, function (err, result) {
       if (err) throw err;
@@ -510,7 +510,7 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
 })
 
 app.get('/resultados_clima', function (req, res) {
-  dbname = "_" + req.query.dbname;
+  dbname = req.query.dbname;
   if (dbname != 'undefined') {
     con.changeUser({database : dbname}, function(err) {
       if (err) throw err;
@@ -524,7 +524,7 @@ app.get('/resultados_clima', function (req, res) {
 
 app.post('/resultados_clima', function (req, res) {
   state = req.body.state;
-  dbname = "_" + req.body.dbname;
+  dbname = req.body.dbname;
   
   if (state == 0) {
     let crumb = 'Resultados ' + dbname;
