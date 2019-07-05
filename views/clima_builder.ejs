@@ -20,6 +20,35 @@
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
 
+  <style type="text/css">
+  tr.type1 td{
+  background-color: #2C90E8;
+  }
+  tr.type2 td{
+  background-color: #6CC96F;
+  }
+  tr.type3 td{
+  background-color: #ED9D2D;
+  }
+  tr.type4 td{
+  background-color: #EF4F4F;
+  }
+
+  td.type1{
+  background-color: #2C90E8;
+  }
+  td.type2{
+  background-color: #6CC96F;
+  }
+  td.type3{
+  background-color: #ED9D2D;
+  }
+  td.type4{
+  background-color: #EF4F4F;
+  }
+
+</style>
+
 </head>
 
 <body id="page-top">
@@ -87,101 +116,65 @@
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <a href="#">Suite MP</a>
+            <a href="#">Clima Organizacional</a>
           </li>
           <li class="breadcrumb-item active"><%= crumb %></li>
         </ol>
 
-        <% if (state == 0) { %>
-
         <div class="row">
           <div class="col-xl-3 col-sm-6 mb-3">
-            <form method="get" action="/home">
+            <form method="get" action="/clima">
               <button type="submit" style="background: none; border: none;"><a style="color: white;" class="btn btn-primary btn-lg">Regresar</a></button>
-          </form>
+            </form>
           </div>
-          <div class="col-xl-3 col-sm-6 mb-3">
-              <form method="post" action="/usuarios" enctype="multipart/form-data">
-                <input type="hidden" name="state" value="1">
-                <button type="submit" style="background: none; border: none;"><a style="color: white;" class="btn btn-primary btn-lg"><i class="fas fa-fw fa-plus"></i>&nbsp;Registrar Usuario</a></button>
-              </form>
-            </div>
         </div>
 
-        <div class="card mb-3">
-            <div class="card-header">
-              Usuarios</div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>Nombre</th>
-                      <th>Accesos</th>
-                      <th>Eliminar Usuario</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% if (data.length > 0) {%>
-                      <% for (i = 0; i < data.length; i++) { %>
-                    <tr>
-                      <td><%= data[i].username %></td>
-                      <td><%= data[i].type %></td>
-                      <td class="text-center"><a href="#" class="btn btn-danger"><i class="fas fa-fw fa-trash"></i></a></td>
-                    </tr>
-                      <% } %>
-                    <% } else { %>
-                    <tr>
-                      <td>No hay usuarios disponibles</td>
-                    </tr>
-                    <% } %>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+        <div class="row">
+          <div class="col-xl-6 col-sm-12 mb-6">
+            <form method="post" action="/resultados_clima">
+              <input type="hidden" name="state" value="0">
+              <input type="hidden" name="dbname" value="<%= dbname %>">
+              <input type="hidden" name="generales_length" value="<%= data2.length %>">
+              <input type="hidden" name="segment_length" value="<%= data1.length %>">
 
-          <% } else if (state == 1) { %>
-          <div class="row">
-            <div class="col-xl-3 col-sm-6 mb-3">
-              <form method="get" action="/usuarios">
-                <button type="submit" style="background: none; border: none;"><a style="color: white;" class="btn btn-primary btn-lg">Regresar</a></button>
-            </form>
-            </div>
-          </div>
-
-          <form method="post" action="/usuarios" enctype="multipart/form-data">
-            <div class="form-row">
+              <div class="form-row">
               <div class="col-xl-6 col-sm-12 mb-6">
-                <div class="form-group"><h4>Nuevo Usuario</h4></div>
-                <div class="form-group">
-                  <label for="username_input">Nombre de Usuario: </label>
-                  <input type="text" class="form-control" name="username_input" id="username_input" required>
+                <div class="form-group"><h3>Selección de Resultados</h3></div>
+                <div class="form-check form-group">
+                  <input type="checkbox" class="form-check-input" name="global_check" id="global_check" value="0">
+                  <label class="form-check-label" for="global_check">Segmentar Información?</label>
                 </div>
-                <div class="form-group">
-                  <label for="password_input">Contraseña: </label>
-                  <input type="text" class="form-control" name="password_input" id="password_input" required>
+
+                <% for (i = 0; i < data2.length; i++) { %>
+                <div class="form-check form-group">
+                  <input type="checkbox" class="form-check-input" name="check_<%= data2[i].id %>" id="check_<%= data2[i].id %>" value="<%= data2[i].id %>" disabled>
+                  <label class="form-check-label" for="check_<%= data2[i].id %>">Por <%= data2[i].nombre %> </label>
+
+                  <% for (k = 0; k < data1.length; k++) { %>
+                    <% if (data2[i].id == data1[k].general_id ) { %>
+                      <% if (data1[k].general_id != 1) { %>
+                  <div class="form-check form-group">
+                    <input type="checkbox" class="form-check-input" name="segment_<%= k+1 %>" id="segment_<%= k+1 %>" value="<%= data1[k].respuesta %>" disabled>
+                    <label class="form-check-label" for="segment_<%= k+1 %>"><%= data1[k].respuesta %> </label>
+                  </div>
+                      <% } else { %>
+                  <div class="form-check form-group">
+                    <input type="checkbox" class="form-check-input" name="segment_<%= k+1 %>" id="segment_<%= k+1 %>" value="<%= data1[k].respuesta %>" disabled>
+                    <label class="form-check-label" for="segment_<%= k+1 %>"><%= data1[k].planta %> </label>
+                  </div>
+                      <% } %>
+                    <% } %>
+                  <% } %>
+
                 </div>
-                <div class="form-group">
-                  <label for="type_input">Accesos: </label>
-                  <input type="number" class="form-control" name="type_input" id="type_input" required>
-                </div>
+                <% } %>
               </div>
             </div>
-            <input type="hidden" name="state" value="2">
-            <button type="submit" class="btn btn-primary btn-lg">Aceptar</button>
-          </form>
 
-          <% } else { %>
-          <form method="get" action="/usuarios">
-          <div class="form-row">
-            <div class="col-xl-6 col-sm-12 mb-6">
-              <div class="form-group"><h4>Usuario registrado exitosamente!</h4></div>
-              <button type="submit" style="background: none; border: none;"><a style="color: white;" class="btn btn-primary btn-lg">Regresar</a></button>
-            </div>
+              <button type="submit" style="background: none; border: none;"><a style="color: white;" class="btn btn-primary btn-lg">Continuar</a></button>
+            </form>
           </div>
-        </form>
-          <% } %>
+        </div>
 
       </div>
 
@@ -243,15 +236,22 @@
   <script src="js/demo/datatables-demo.js"></script>
   <script src="js/demo/chart-area-demo.js"></script>
 
+  <% for (j = 0; j < data2.length; j++) { %>
   <script>
-    $('#servicios_check').change(function(){
-      $("#servicios_input").prop("disabled", !$(this).is(':checked'));
-    });
-
-    $('#otras_check').change(function(){
-      $("#otras_input").prop("disabled", !$(this).is(':checked'));
+    $('#global_check').change(function(){
+      $("#check_<%= data2[j].id %>").prop("disabled", !$(this).is(':checked'));
     });
   </script>
+    <% for (m = 0; m < data1.length; m++) { %>
+      <% if (data2[j].id == data1[m].general_id) { %>
+  <script>
+    $('#check_<%= data2[j].id %>').change(function(){
+      $("#segment_<%= m+1 %>").prop("disabled", !$(this).is(':checked'));
+    });
+  </script>
+      <% } %>
+    <% } %>
+  <% } %>
 
 </body>
 
