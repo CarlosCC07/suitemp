@@ -134,7 +134,12 @@
                       <% } %>
                       <td class="text-center"><a href="/clima_builder?dbname=<%= data[i].nombre + data[i].year %>" class="btn btn-success"><i class="fas fa-fw fa-check"></i></a></td>
                       <td class="text-center"><a href="/editar_clima?dbname=<%= data[i].nombre + data[i].year %>" class="btn btn-primary"><i class="fas fa-fw fa-edit"></i></a></td>
+
+                      <% if (type == 0) { %>
                       <td class="text-center"><a href="#" class="btn btn-danger"><i class="fas fa-fw fa-trash"></i></a></td>
+                      <% } else { %>
+                      <td class="text-center"><a href="#" class="btn btn-danger disabled"><i class="fas fa-fw fa-trash"></i></a></td>
+                      <% } %>
                     </tr>
                       <% } %>
                     <% } else { %>

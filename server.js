@@ -38,6 +38,19 @@ con.connect()
 // *************************************************************************************
 // FUNCTION DECLARATIONS
 // *************************************************************************************
+function delete_user(user_id) {
+  var sql_delete_user = "DELETE FROM `usuarios` WHERE `id` = " + user_id + ";";
+  con.query(sql_delete_user, function (err, result) {
+    if (err) throw err;
+  });
+}
+
+function delete_company(company_id) {
+  var sql_delete_company = "DELETE FROM `empresas` WHERE `id` = " + company_id + ";";
+  con.query(sql_delete_company, function (err, result) {
+    if (err) throw err;
+  });
+}
 
 function create_tables(dbname, se, ce, oe) {
   
@@ -223,19 +236,21 @@ function create_segmented_tables(generales_checks, segment_checks) {
             create_query_comentarios += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
             create_query_otros += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
             for (k = 0; k < data1.length; k++) {
-              if(segment_checks[k] == data1[k].id && segment_checks[k] != undefined) {
-                if(data1[k].general_id == 1) {
-                  create_query_global += " AND respuesta = " + data1[k].respuesta;
-                  create_query_generales += " AND respuesta = " + data1[k].respuesta;
-                  create_query_servicios += " AND respuesta = " + data1[k].respuesta;
-                  create_query_comentarios += " AND respuesta = " + data1[k].respuesta;
-                  create_query_otros += " AND respuesta = " + data1[k].respuesta;
-                } else {
-                  create_query_global += " AND respuesta = '" + data1[k].respuesta + "'";
-                  create_query_generales += " AND respuesta = '" + data1[k].respuesta + "'";
-                  create_query_servicios += " AND respuesta = '" + data1[k].respuesta + "'";
-                  create_query_comentarios += " AND respuesta = '" + data1[k].respuesta + "'";
-                  create_query_otros += " AND respuesta = '" + data1[k].respuesta + "'";
+              for (q = 0; q < segment_checks.length; q++) {
+                if(segment_checks[q] == data1[k].respuesta && segment_checks[q] != undefined) {
+                  if(data1[k].general_id == 1) {
+                    create_query_global += " AND respuesta = " + data1[k].respuesta;
+                    create_query_generales += " AND respuesta = " + data1[k].respuesta;
+                    create_query_servicios += " AND respuesta = " + data1[k].respuesta;
+                    create_query_comentarios += " AND respuesta = " + data1[k].respuesta;
+                    create_query_otros += " AND respuesta = " + data1[k].respuesta;
+                  } else {
+                    create_query_global += " AND respuesta = '" + data1[k].respuesta + "'";
+                    create_query_generales += " AND respuesta = '" + data1[k].respuesta + "'";
+                    create_query_servicios += " AND respuesta = '" + data1[k].respuesta + "'";
+                    create_query_comentarios += " AND respuesta = '" + data1[k].respuesta + "'";
+                    create_query_otros += " AND respuesta = '" + data1[k].respuesta + "'";
+                  }
                 }
               }
             }
@@ -247,7 +262,11 @@ function create_segmented_tables(generales_checks, segment_checks) {
           }
         }
 
-        console.log(create_query_global);
+        // console.log(create_query_global);
+        // console.log(create_query_generales);
+        // console.log(create_query_servicios);
+        // console.log(create_query_comentarios);
+        // console.log(create_query_otros);
 
         con.query(create_query_global, function (err, data1, fields) {
           if (err) throw err;
@@ -474,11 +493,26 @@ app.post('/empresas', upload.none(), function (req, res) {
 
     let crumb = 'Registrar Empresas';
     res.render('empresas', {state, crumb, user, type});
+  } else if (state == 3) {
+    company_id = parseInt(req.body.data_company_id);
+    var sql_verify_company = "SELECT `empresas`.`id`, `usuarios`.`id` AS usuarios_id, `clima`.`id` AS clima_id FROM `empresas` LEFT JOIN `usuarios` ON `usuarios`.`empresa_id` = `empresas`.`id` LEFT JOIN `clima` ON `clima`.`empresa_id` = `empresas`.`id` WHERE `empresas`.`id` = " + company_id + " AND (usuarios.id IS NOT NULL OR clima.id IS NOT NULL);";
+    con.query(sql_verify_company, function (err, result) {
+      if (err) throw err;
+      let crumb = 'Registrar Empresas';
+      if(result[0] == undefined) {
+        delete_company(company_id);
+        res.render('empresas', {state, crumb, user, type});
+      } else {
+        state = 4;
+        res.render('empresas', {state, crumb, user, type});
+      }
+    });
   }
 })
 
 app.get('/usuarios', function (req, res) {
-  con.query("SELECT * FROM usuarios", function (err, result, fields) {
+  sql_usuarios = "SELECT `usuarios`.`id`, `username`, `password`, `creation_date`, `type`, `nombre` FROM `usuarios` INNER JOIN `empresas` ON `empresas`.`id` = `usuarios`.`empresa_id`";
+  con.query(sql_usuarios, function (err, result, fields) {
     if (err) throw err;
     let state = 0;
     let crumb = 'Usuarios';
@@ -489,21 +523,39 @@ app.get('/usuarios', function (req, res) {
 
 app.post('/usuarios', upload.none(), function (req, res) {
   state = parseInt(req.body.state);
-  if (state == 1) { 
-    let crumb = 'Registrar Usuarios';
-    res.render('usuarios', {state, crumb, user, type});
+  if (state == 1) {
+    con.query("SELECT * FROM empresas", function (err, result, fields) {
+      if (err) throw err;
+      let crumb = 'Registrar Usuarios';
+      let data = result;
+      res.render('usuarios', {state, crumb, data, user, type});
+    }); 
   } else if (state == 2) {
     let username = req.body.username_input;
     let password = req.body.password_input;
     let type = req.body.type_input;
+    let empresa = req.body.select_empresa;
 
-    var sql_insert_usuario = "INSERT INTO usuarios (username, password, type) VALUES ('" + username + "', '" + password + "', '" + type + "')";
+    var sql_insert_usuario = "INSERT INTO usuarios (username, password, empresa_id, type) VALUES ('" + username + "', '" + password + "', '" + empresa + "', '" + type + "')";
     con.query(sql_insert_usuario, function (err, result) {
       if (err) throw err;
     });
 
     let crumb = 'Registrar Usuarios';
     res.render('usuarios', {state, crumb, user, type});
+  } else if (state == 3) {
+    user_id = parseInt(req.body.data_user_id);
+    delete_user(user_id, function(err, result)  {
+        if (err) throw err;
+    });
+    sql_usuarios = "SELECT `usuarios`.`id`, `username`, `password`, `creation_date`, `type`, `nombre` FROM `usuarios` INNER JOIN `empresas` ON `empresas`.`id` = `usuarios`.`empresa_id`";
+    con.query(sql_usuarios, function (err, result, fields) {
+      if (err) throw err;
+      let state = 0;
+      let crumb = 'Usuarios';
+      let data = result;
+      res.render('usuarios', {state, crumb, data, user, type});
+    });
   }
 })
 
@@ -688,8 +740,9 @@ app.get('/clima_builder', function (req, res) {
 })
 
 app.get('/resultados_clima', function (req, res) {
+  dbname = req.query.dbname;
   let state = 0;
-  let crumb = 'Resultados ' + dbname;let servicios_enabled = parseInt(req.body.servicios_check);
+  let crumb = 'Resultados ' + dbname;
   res.render('resultados_clima', {state, crumb, user, type});
 })
 
@@ -701,38 +754,49 @@ app.post('/resultados_clima', function (req, res) {
   segment_length = parseInt(req.body.segment_length);
   var generales_checks = [];
   var segment_checks = [];
+  var empty_generals = true;
 
   for(i = 0; i < generales_length; i++){
     switch(i) {
       case 0:
         generales_checks[i] = parseInt(req.body.check_1);
+        if (!isNaN(generales_checks[i])) empty_generals = false; 
         break;
       case 1:
         generales_checks[i] = parseInt(req.body.check_2);
+        if (!isNaN(generales_checks[i])) empty_generals = false; 
         break;
       case 2:
         generales_checks[i] = parseInt(req.body.check_3);
+        if (!isNaN(generales_checks[i])) empty_generals = false; 
         break;
       case 3:
         generales_checks[i] = parseInt(req.body.check_4);
+        if (!isNaN(generales_checks[i])) empty_generals = false; 
         break;
       case 4:
         generales_checks[i] = parseInt(req.body.check_5);
+        if (!isNaN(generales_checks[i])) empty_generals = false; 
         break;
       case 5:
         generales_checks[i] = parseInt(req.body.check_6);
+        if (!isNaN(generales_checks[i])) empty_generals = false; 
         break;
       case 6:
         generales_checks[i] = parseInt(req.body.check_7);
+        if (!isNaN(generales_checks[i])) empty_generals = false; 
         break;
       case 7:
         generales_checks[i] = parseInt(req.body.check_8);
+        if (!isNaN(generales_checks[i])) empty_generals = false; 
         break;
       case 8:
         generales_checks[i] = parseInt(req.body.check_9);
+        if (!isNaN(generales_checks[i])) empty_generals = false; 
         break;
       case 9:
         generales_checks[i] = parseInt(req.body.check_10);
+        if (!isNaN(generales_checks[i])) empty_generals = false; 
         break;
       default:
         generales_checks[i] = "";
@@ -839,9 +903,9 @@ app.post('/resultados_clima', function (req, res) {
   if (state == 0) {
     let crumb = 'Resultados ' + dbname;
 
-    if (global_check == 0) {
-      console.log(generales_checks);
-      console.log(segment_checks);
+    if (global_check == 0 && !empty_generals) {
+      // console.log(generales_checks);
+      // console.log(segment_checks);
       create_segmented_tables(generales_checks, segment_checks, function(err, result)  {
         if (err) throw err;
       });

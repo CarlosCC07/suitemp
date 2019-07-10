@@ -127,7 +127,31 @@
                     <tr>
                       <td><%= data[i].nombre %></td>
                       <td><%= data[i].giro %></td>
-                      <td class="text-center"><a href="#" class="btn btn-danger"><i class="fas fa-fw fa-trash"></i></a></td>
+                      <td class="text-center"><a href="#" class="btn btn-danger" data-toggle="modal" data-target="#deleteCompanyModal<%= data[i].id %>"><i class="fas fa-fw fa-trash"></i></a></td>
+
+                      <!-- Delete Company Modal-->
+                        <div class="modal fade" id="deleteCompanyModal<%= data[i].id %>" tabindex="-2" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Eliminar Empresa?</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">Selecciona aceptar para confirmar. No se puede restablecer una vez eliminada.</div>
+                              <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                                <form method="post" action="/empresas" enctype="multipart/form-data">
+                                  <input type="hidden" name="state" value="3">
+                                  <input type="hidden" name="data_company_id" value="<%= data[i].id %>">
+                                  <button class="btn btn-danger" type="submit">Eliminar</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                     </tr>
                       <% } %>
                     <% } else { %>
@@ -172,7 +196,15 @@
           <form method="get" action="/empresas">
           <div class="form-row">
             <div class="col-xl-6 col-sm-12 mb-6">
+
+              <% if (state == 2) { %>
               <div class="form-group"><h4>Empresa registrada exitosamente!</h4></div>
+               <% } else if (state == 3) { %>
+               <div class="form-group"><h4>Empresa eliminada exitosamente!</h4></div>
+               <% } else if (state == 4) { %>
+               <div class="form-group"><h4>La Empresa no ha sido eliminada porque tiene usuarios o estudios activos.</h4></div>
+               <% } %>
+
               <button type="submit" style="background: none; border: none;"><a style="color: white;" class="btn btn-primary btn-lg">Regresar</a></button>
             </div>
           </div>

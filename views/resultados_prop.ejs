@@ -110,7 +110,7 @@
         %>
           <div class="row">
             <div class="col-xl-3 col-sm-6 mb-3">
-              <form method="post" action="/resultados_clima">
+              <form method="get" action="/resultados_clima?state=0&dbname=<%= dbname %>">
                 <input type="hidden" name="state" value="0">
                 <input type="hidden" name="dbname" value="<%= dbname %>">
                 <button type="submit" style="background: none; border: none;"><a style="color: white;" class="btn btn-primary btn-lg">Regresar</a></button>
