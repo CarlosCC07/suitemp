@@ -177,7 +177,7 @@ function create_temporary_tables() {
 
         con.query(create_query_global, function (err, data1, fields) {
           if (err) throw err;
-          console.log(create_query_global);
+          //console.log(create_query_global);
         });
         con.query(create_query_generales, function (err, data1, fields) {
           if (err) throw err;
@@ -767,159 +767,158 @@ app.post('/resultados_clima', function (req, res) {
   generales_length = parseInt(req.body.generales_length);
   segment_length = parseInt(req.body.segment_length);
   var generales_checks = [];
+  var temp_checks = [];
   var segment_checks = [];
   var empty_generals = true;
 
-  for(i = 0; i < generales_length; i++){
-    switch(i) {
-      case 0:
-        generales_checks[i] = parseInt(req.body.check_1);
-        if (!isNaN(generales_checks[i])) empty_generals = false; 
-        break;
-      case 1:
-        generales_checks[i] = parseInt(req.body.check_2);
-        if (!isNaN(generales_checks[i])) empty_generals = false; 
-        break;
-      case 2:
-        generales_checks[i] = parseInt(req.body.check_3);
-        if (!isNaN(generales_checks[i])) empty_generals = false; 
-        break;
-      case 3:
-        generales_checks[i] = parseInt(req.body.check_4);
-        if (!isNaN(generales_checks[i])) empty_generals = false; 
-        break;
-      case 4:
-        generales_checks[i] = parseInt(req.body.check_5);
-        if (!isNaN(generales_checks[i])) empty_generals = false; 
-        break;
-      case 5:
-        generales_checks[i] = parseInt(req.body.check_6);
-        if (!isNaN(generales_checks[i])) empty_generals = false; 
-        break;
-      case 6:
-        generales_checks[i] = parseInt(req.body.check_7);
-        if (!isNaN(generales_checks[i])) empty_generals = false; 
-        break;
-      case 7:
-        generales_checks[i] = parseInt(req.body.check_8);
-        if (!isNaN(generales_checks[i])) empty_generals = false; 
-        break;
-      case 8:
-        generales_checks[i] = parseInt(req.body.check_9);
-        if (!isNaN(generales_checks[i])) empty_generals = false; 
-        break;
-      case 9:
-        generales_checks[i] = parseInt(req.body.check_10);
-        if (!isNaN(generales_checks[i])) empty_generals = false; 
-        break;
-      default:
-        generales_checks[i] = "";
-    } 
-  }
-
   for(i = 0; i < segment_length; i++){
+
     switch(i) {
       case 0:
         segment_checks[i] = req.body.segment_1;
+        temp_checks[i] = parseInt(req.body.check_1);
         break;
       case 1:
         segment_checks[i] = req.body.segment_2;
+        temp_checks[i] = parseInt(req.body.check_2);
         break;
       case 2:
         segment_checks[i] = req.body.segment_3;
+        temp_checks[i] = parseInt(req.body.check_3);
         break;
       case 3:
         segment_checks[i] = req.body.segment_4;
+        temp_checks[i] = parseInt(req.body.check_4);
         break;
       case 4:
-        segment_checks[i] = req.body.segment_5;
+        segment_checks[i] = req.body.segment_5
+        temp_checks[i] = parseInt(req.body.check_5);
         break;
       case 5:
         segment_checks[i] = req.body.segment_6;
+        temp_checks[i] = parseInt(req.body.check_6);
         break;
       case 6:
         segment_checks[i] = req.body.segment_7;
+        temp_checks[i] = parseInt(req.body.check_7);
         break;
       case 7:
         segment_checks[i] = req.body.segment_8;
+        temp_checks[i] = parseInt(req.body.check_8);
         break;
       case 8:
         segment_checks[i] = req.body.segment_9;
+        temp_checks[i] = parseInt(req.body.check_9);
         break;
       case 9:
         segment_checks[i] = req.body.segment_10;
+        temp_checks[i] = parseInt(req.body.check_10);
         break;
       case 10:
         segment_checks[i] = req.body.segment_11;
+        temp_checks[i] = parseInt(req.body.check_11);
         break;
       case 11:
         segment_checks[i] = req.body.segment_12;
+        temp_checks[i] = parseInt(req.body.check_12);
         break;
       case 12:
         segment_checks[i] = req.body.segment_13;
+        temp_checks[i] = parseInt(req.body.check_13);
         break;
       case 13:
         segment_checks[i] = req.body.segment_14;
+        temp_checks[i] = parseInt(req.body.check_14);
         break;
       case 14:
         segment_checks[i] = req.body.segment_15;
+        temp_checks[i] = parseInt(req.body.check_15);
         break;
       case 15:
         segment_checks[i] = req.body.segment_16;
+        temp_checks[i] = parseInt(req.body.check_16);
         break;
       case 16:
         segment_checks[i] = req.body.segment_17;
+        temp_checks[i] = parseInt(req.body.check_17);
         break;
       case 17:
         segment_checks[i] = req.body.segment_18;
+        temp_checks[i] = parseInt(req.body.check_18);
         break;
       case 18:
         segment_checks[i] = req.body.segment_19;
+        temp_checks[i] = parseInt(req.body.check_19);
         break;
       case 19:
         segment_checks[i] = req.body.segment_20;
+        temp_checks[i] = parseInt(req.body.check_20);
         break;
       case 20:
         segment_checks[i] = req.body.segment_21;
+        temp_checks[i] = parseInt(req.body.check_21);
         break;
       case 21:
         segment_checks[i] = req.body.segment_22;
+        temp_checks[i] = parseInt(req.body.check_22);
         break;
       case 22:
         segment_checks[i] = req.body.segment_23;
+        temp_checks[i] = parseInt(req.body.check_23);
         break;
       case 23:
         segment_checks[i] = req.body.segment_24;
+        temp_checks[i] = parseInt(req.body.check_24);
         break;
       case 24:
         segment_checks[i] = req.body.segment_25;
+        temp_checks[i] = parseInt(req.body.check_25);
         break;
       case 25:
         segment_checks[i] = req.body.segment_26;
+        temp_checks[i] = parseInt(req.body.check_26);
         break;
       case 26:
         segment_checks[i] = req.body.segment_27;
+        temp_checks[i] = parseInt(req.body.check_27);
         break;
       case 27:
         segment_checks[i] = req.body.segment_28;
+        temp_checks[i] = parseInt(req.body.check_28);
         break;
       case 28:
         segment_checks[i] = req.body.segment_29;
+        temp_checks[i] = parseInt(req.body.check_29);
         break;
       case 29:
         segment_checks[i] = req.body.segment_30;
+        temp_checks[i] = parseInt(req.body.check_30);
         break;
       default:
         segment_checks[i] = "";
     } 
   }
+
+  for(i = 0; i < generales_length; i++){
+    for(j = 0; j < segment_length; j++){
+      if(segment_checks[j] != undefined && temp_checks[j] == i+1){
+        generales_checks[i] = temp_checks[j];
+      }
+    }
+    if(generales_checks[i] == i+1) {
+      empty_generals = false;
+    } else {
+      generales_checks[i] = undefined;
+    }
+  }
   
   if (state == 0) {
     let crumb = 'Resultados ' + dbname;
 
+    //console.log(generales_checks);
+    //console.log(segment_checks);
+    //console.log(temp_checks);
     if (global_check == 0 && !empty_generals) {
-      // console.log(generales_checks);
-      // console.log(segment_checks);
       create_segmented_tables(generales_checks, segment_checks, function(err, result)  {
         if (err) throw err;
       });
