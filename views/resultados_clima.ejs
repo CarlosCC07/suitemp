@@ -75,7 +75,7 @@
 
         <div class="row">
           <div class="col-xl-3 col-sm-6 mb-3">
-            <form method="get" action="/clima_builder">
+            <form method="get" action="/clima">
               <button type="submit" style="background: none; border: none;"><a style="color: white;" class="btn btn-primary btn-lg">Regresar</a></button>
             </form>
           </div>
@@ -157,6 +157,25 @@
             </div>
           </div>
 
+          <div id="acc_query" class="panel panel-primary behclick-panel">
+          <div class="panel-body">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                &nbsp;<a class="btn btn-warning" data-toggle="collapse" href="#collapse_query">Query</a>
+              </h4>
+            </div>
+            <div id="collapse_query" class="panel-collapse collapse in" >
+              <ul class="list-group">                          
+                <li class="list-group-item">
+                  <div class="form-check form-group">
+                    <% include ./include/query %>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
           <div class="card mb-3">
             <div class="card-header">
               Resultados por Rubro</div>
@@ -198,6 +217,25 @@
               </form>
             </div>
           </div>
+
+          <div id="acc_query" class="panel panel-primary behclick-panel">
+          <div class="panel-body">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                &nbsp;<a class="btn btn-warning" data-toggle="collapse" href="#collapse_query">Query</a>
+              </h4>
+            </div>
+            <div id="collapse_query" class="panel-collapse collapse in" >
+              <ul class="list-group">                          
+                <li class="list-group-item">
+                  <div class="form-check form-group">
+                    <% include ./include/query %>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
           <div class="card mb-3">
             <div class="card-header">
@@ -242,6 +280,25 @@
               </form>
             </div>
           </div>
+
+          <div id="acc_query" class="panel panel-primary behclick-panel">
+          <div class="panel-body">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                &nbsp;<a class="btn btn-warning" data-toggle="collapse" href="#collapse_query">Query</a>
+              </h4>
+            </div>
+            <div id="collapse_query" class="panel-collapse collapse in" >
+              <ul class="list-group">                          
+                <li class="list-group-item">
+                  <div class="form-check form-group">
+                    <% include ./include/query %>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
           <div class="card mb-3">
             <div class="card-header">
@@ -335,6 +392,25 @@
             </div>
           </div>
 
+          <div id="acc_query" class="panel panel-primary behclick-panel">
+          <div class="panel-body">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a class="btn btn-warning" data-toggle="collapse" href="#collapse_query">Query</a>
+              </h4>
+            </div>
+            <div id="collapse_query" class="panel-collapse collapse in" >
+              <ul class="list-group">                          
+                <li class="list-group-item">
+                  <div class="form-check form-group">
+                    <% include ./include/query %>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
             <% for (i = 1; i < data4.length; i++) { %>
             <div class="card mb-3">
             <div class="card-header"><%= data4[i].nombre %></div>
@@ -399,6 +475,25 @@
               </form>
             </div>
           </div>
+
+          <div id="acc_query" class="panel panel-primary behclick-panel">
+          <div class="panel-body">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                &nbsp;<a class="btn btn-warning" data-toggle="collapse" href="#collapse_query">Query</a>
+              </h4>
+            </div>
+            <div id="collapse_query" class="panel-collapse collapse in" >
+              <ul class="list-group">                          
+                <li class="list-group-item">
+                  <div class="form-check form-group">
+                    <% include ./include/query %>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
           <div class="card mb-3">
             <div class="card-header">
@@ -510,6 +605,25 @@
             </div>
           </div>
 
+          <div id="acc_query" class="panel panel-primary behclick-panel">
+          <div class="panel-body">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                &nbsp;<a class="btn btn-warning" data-toggle="collapse" href="#collapse_query">Query</a>
+              </h4>
+            </div>
+            <div id="collapse_query" class="panel-collapse collapse in" >
+              <ul class="list-group">                          
+                <li class="list-group-item">
+                  <div class="form-check form-group">
+                    <% include ./include/query %>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
           <div class="card mb-3">
             <div class="card-header">
               Comentarios</div>
@@ -548,6 +662,25 @@
               </form>
             </div>
           </div>
+
+          <div id="acc_query" class="panel panel-primary behclick-panel">
+          <div class="panel-body">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                &nbsp;<a class="btn btn-warning" data-toggle="collapse" href="#collapse_query">Query</a>
+              </h4>
+            </div>
+            <div id="collapse_query" class="panel-collapse collapse in" >
+              <ul class="list-group">                          
+                <li class="list-group-item">
+                  <div class="form-check form-group">
+                    <% include ./include/query %>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
             <% for (i = 0; i < data1.length; i++) { %>
           <div class="card mb-3">
@@ -600,6 +733,24 @@
       $("#otras_input").prop("disabled", !$(this).is(':checked'));
     });
   </script>
+
+   <% for (j = 0; j < data_gen.length; j++) { %>
+  <script>
+    $('#global_check').change(function(){
+      $("#segment_<%= j+1 %>").prop("disabled", !$(this).is(':checked'));
+    });
+  </script>
+  <% } %>
+
+  <script type="text/javascript">
+  function toggleChevtwo(e) {
+    $(e.target)
+      .prev('.panel-heading')
+      .find("i.indicator")
+    }
+    $('#acc_query').on('hidden.bs.collapse', toggleChevron);
+    $('#acc_query').on('shown.bs.collapse', toggleChevron);
+</script>
 
   <% if (state == 4) {%>
   <script>

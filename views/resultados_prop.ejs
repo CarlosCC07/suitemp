@@ -49,6 +49,25 @@
             </div>
           </div>
 
+          <div id="acc_query" class="panel panel-primary behclick-panel">
+          <div class="panel-body">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                &nbsp;<a class="btn btn-warning" data-toggle="collapse" href="#collapse_query">Query</a>
+              </h4>
+            </div>
+            <div id="collapse_query" class="panel-collapse collapse in" >
+              <ul class="list-group">                          
+                <li class="list-group-item">
+                  <div class="form-check form-group">
+                    <% include ./include/query %>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
           <div class="card mb-3">
             <div class="card-header">
               Tabla de Porcentajes</div>
@@ -132,6 +151,25 @@
       $("#otras_input").prop("disabled", !$(this).is(':checked'));
     });
   </script>
+
+   <% for (j = 0; j < data_gen.length; j++) { %>
+  <script>
+    $('#global_check').change(function(){
+      $("#segment_<%= j+1 %>").prop("disabled", !$(this).is(':checked'));
+    });
+  </script>
+  <% } %>
+
+  <script type="text/javascript">
+  function toggleChevtwo(e) {
+    $(e.target)
+      .prev('.panel-heading')
+      .find("i.indicator")
+    }
+    $('#acc_query').on('hidden.bs.collapse', toggleChevron);
+    $('#acc_query').on('shown.bs.collapse', toggleChevron);
+  </script>
+
   <% for (j = 0; j < data1.length; j++) { %>
   <script>
   var ctx = document.getElementById("grafica-prop-<%= j %>").getContext('2d');
