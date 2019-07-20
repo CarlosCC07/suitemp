@@ -128,165 +128,255 @@ function create_tables(dbname, se, ce, oe) {
   }  
 }
 
-function create_temporary_tables() {
-  var sql1 = "SELECT `general_id`, `nombre`, `respuesta`, `planta` FROM `generales_respuestas` INNER JOIN `generales` ON `generales_respuestas`.`general_id` = `generales`.`id` LEFT JOIN `plantas` ON `generales_respuestas`.`respuesta` = `plantas`.`id` GROUP BY `respuesta` ORDER BY `general_id`";
-  var sql2 = "SELECT * FROM `generales`";
-  var create_query_global = "";
-  var create_query_generales = "";
-  var create_query_servicios = "";
-  var create_query_comentarios = "";
-  var create_query_otros = "";
-    con.query(sql1, function (err, data1, fields) {
-      if (err) throw err;
-      con.query(sql2, function (err, data2, fields) {
-        if (err) throw err;
-        create_query_global = "CREATE TEMPORARY TABLE IF NOT EXISTS global_temp SELECT a1.folio_id, a1.reactivo_id, a1.respuesta, ";
-        create_query_generales = "CREATE TEMPORARY TABLE IF NOT EXISTS generales_respuestas_temp SELECT a1.folio_id, a1.general_id, a1.respuesta, ";
-        create_query_servicios = "CREATE TEMPORARY TABLE IF NOT EXISTS servicios_respuestas_temp SELECT a1.folio_id, a1.servicio_id, a1.respuesta, ";
-        create_query_comentarios = "CREATE TEMPORARY TABLE IF NOT EXISTS comentarios_temp SELECT a1.folio_id, a1.comentario, ";
-        create_query_otros = "CREATE TEMPORARY TABLE IF NOT EXISTS otras_respuestas_temp SELECT a1.folio_id, a1.pregunta_id, a1.respuesta, ";
-        for (i = 0; i < data2.length; i++){
-          if (i+1 == data2.length) {
-            create_query_global += ("b" + (i+1) + ".general_id_" + (i+1) + " ");
-            create_query_generales += ("b" + (i+1) + ".general_id_" + (i+1) + " ");
-            create_query_servicios += ("b" + (i+1) + ".general_id_" + (i+1) + " ");
-            create_query_comentarios += ("b" + (i+1) + ".general_id_" + (i+1) + " ");
-            create_query_otros += ("b" + (i+1) + ".general_id_" + (i+1) + " ");
-          } else {
-            create_query_global += ("b" + (i+1) + ".general_id_" + (i+1) + ", ");
-            create_query_generales += ("b" + (i+1) + ".general_id_" + (i+1) + ", ");
-            create_query_servicios += ("b" + (i+1) + ".general_id_" + (i+1) + ", ");
-            create_query_comentarios += ("b" + (i+1) + ".general_id_" + (i+1) + ", ");
-            create_query_otros += ("b" + (i+1) + ".general_id_" + (i+1) + ", ");
-          }
-        }
+function query_builder(state, cond, generales_checks, segment_checks, data1, data2) {
+  var query = "";
 
-        create_query_global += "FROM global AS a1 ";
-        create_query_generales += "FROM generales_respuestas AS a1 ";
-        create_query_servicios += "FROM servicios_respuestas AS a1 ";
-        create_query_comentarios += "FROM comentarios AS a1 ";
-        create_query_otros += "FROM otras_respuestas AS a1 ";
+        if (state == 1) {
+          query = "SELECT a1.rubro, AVG(a2.respuesta) AS avg_respuesta FROM reactivos AS a1 INNER JOIN global AS a2 ";
+          for (j = 0; j < data2.length; j++) {
+            if(generales_checks[j] == data2[j].id && generales_checks[j] != undefined) {
+              query += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
 
-        for (i = 0; i < data2.length; i++){
-          create_query_global += (" INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (i+1) + " FROM generales_respuestas WHERE general_id = " + (i+1) + ") AS b" + (i+1) + " ON b" + (i+1) + ".folio_id = a1.folio_id");
-          create_query_generales += (" INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (i+1) + " FROM generales_respuestas WHERE general_id = " + (i+1) + ") AS b" + (i+1) + " ON b" + (i+1) + ".folio_id = a1.folio_id");
-          create_query_servicios += (" INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (i+1) + " FROM generales_respuestas WHERE general_id = " + (i+1) + ") AS b" + (i+1) + " ON b" + (i+1) + ".folio_id = a1.folio_id");
-          create_query_comentarios += (" INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (i+1) + " FROM generales_respuestas WHERE general_id = " + (i+1) + ") AS b" + (i+1) + " ON b" + (i+1) + ".folio_id = a1.folio_id");
-          create_query_otros += (" INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (i+1) + " FROM generales_respuestas WHERE general_id = " + (i+1) + ") AS b" + (i+1) + " ON b" + (i+1) + ".folio_id = a1.folio_id");
-        }
-
-        con.query(create_query_global, function (err, data1, fields) {
-          if (err) throw err;
-          //console.log(create_query_global);
-        });
-        con.query(create_query_generales, function (err, data1, fields) {
-          if (err) throw err;
-        });
-        con.query(create_query_servicios, function (err, data1, fields) {
-          if (err) throw err;
-        });
-        con.query(create_query_comentarios, function (err, data1, fields) {
-          if (err) throw err;
-        });
-        con.query(create_query_otros, function (err, data1, fields) {
-          if (err) throw err;
-        });
-        
-      });
-    });
-}
-
-function create_segmented_tables(generales_checks, segment_checks) {
-  var sql1 = "SELECT `general_id`, `nombre`, `respuesta`, `planta` FROM `generales_respuestas` INNER JOIN `generales` ON `generales_respuestas`.`general_id` = `generales`.`id` LEFT JOIN `plantas` ON `generales_respuestas`.`respuesta` = `plantas`.`id` GROUP BY `respuesta` ORDER BY `general_id`";
-  var sql2 = "SELECT * FROM `generales`";
-  var create_query_global = "";
-  var create_query_generales = "";
-  var create_query_servicios = "";
-  var create_query_comentarios = "";
-  var create_query_otros = "";
-    con.query(sql1, function (err, data1, fields) {
-      if (err) throw err;
-      con.query(sql2, function (err, data2, fields) {
-        if (err) throw err;
-        create_query_global = "CREATE TEMPORARY TABLE IF NOT EXISTS global_temp SELECT a1.folio_id, a1.reactivo_id, a1.respuesta";
-        create_query_generales = "CREATE TEMPORARY TABLE IF NOT EXISTS generales_respuestas_temp SELECT a1.folio_id, a1.general_id, a1.respuesta";
-        create_query_servicios = "CREATE TEMPORARY TABLE IF NOT EXISTS servicios_respuestas_temp SELECT a1.folio_id, a1.servicio_id, a1.respuesta";
-        create_query_comentarios = "CREATE TEMPORARY TABLE IF NOT EXISTS comentarios_temp SELECT a1.folio_id, a1.comentario";
-        create_query_otros = "CREATE TEMPORARY TABLE IF NOT EXISTS otras_respuestas_temp SELECT a1.folio_id, a1.pregunta_id, a1.respuesta";
-        for (i = 0; i < data2.length; i++){
-          if(generales_checks[i] == data2[i].id && generales_checks[i] != undefined) {
-            create_query_global += (", b" + (i+1) + ".general_id_" + (i+1) + " ");
-            create_query_generales += (", b" + (i+1) + ".general_id_" + (i+1) + " ");
-            create_query_servicios += (", b" + (i+1) + ".general_id_" + (i+1) + " ");
-            create_query_comentarios += (", b" + (i+1) + ".general_id_" + (i+1) + " ");
-            create_query_otros += (", b" + (i+1) + ".general_id_" + (i+1) + " ");
-          }
-        }
-
-        create_query_global += "FROM global AS a1 ";
-        create_query_generales += "FROM generales_respuestas AS a1 ";
-        create_query_servicios += "FROM servicios_respuestas AS a1 ";
-        create_query_comentarios += "FROM comentarios AS a1 ";
-        create_query_otros += "FROM otras_respuestas AS a1 ";
-
-        for (j = 0; j < data2.length; j++) {
-          if(generales_checks[j] == data2[j].id && generales_checks[j] != undefined) {
-            create_query_global += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
-            create_query_generales += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
-            create_query_servicios += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);  
-            create_query_comentarios += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
-            create_query_otros += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
-            for (k = 0; k < data1.length; k++) {
-              for (q = 0; q < segment_checks.length; q++) {
-                if(segment_checks[q] == data1[k].respuesta && segment_checks[q] != undefined) {
-                  if(data1[k].general_id == 1) {
-                    create_query_global += " AND respuesta = " + data1[k].respuesta;
-                    create_query_generales += " AND respuesta = " + data1[k].respuesta;
-                    create_query_servicios += " AND respuesta = " + data1[k].respuesta;
-                    create_query_comentarios += " AND respuesta = " + data1[k].respuesta;
-                    create_query_otros += " AND respuesta = " + data1[k].respuesta;
-                  } else {
-                    create_query_global += " AND respuesta = '" + data1[k].respuesta + "'";
-                    create_query_generales += " AND respuesta = '" + data1[k].respuesta + "'";
-                    create_query_servicios += " AND respuesta = '" + data1[k].respuesta + "'";
-                    create_query_comentarios += " AND respuesta = '" + data1[k].respuesta + "'";
-                    create_query_otros += " AND respuesta = '" + data1[k].respuesta + "'";
+              for (k = 0; k < data1.length; k++) {
+                for (q = 0; q < segment_checks.length; q++) {
+                  if(segment_checks[q] == data1[k].respuesta && segment_checks[q] != undefined) {
+                    if(data1[k].general_id == 1) {
+                      query += " AND respuesta = " + data1[k].respuesta;
+                      
+                    } else {
+                      query += " AND respuesta = '" + data1[k].respuesta + "'";
+                      
+                    }
                   }
                 }
               }
+              query += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a2.folio_id";
+              
             }
-            create_query_global += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a1.folio_id";
-            create_query_generales += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a1.folio_id";
-            create_query_servicios += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a1.folio_id";
-            create_query_comentarios += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a1.folio_id";
-            create_query_otros += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a1.folio_id";
           }
+
+          query += " WHERE a1.id = a2.reactivo_id GROUP BY rubro ORDER BY avg_respuesta DESC;";
+
+        } else if (state == 2) {
+
+          query = "SELECT a1.rubro, a1.factor, AVG(a2.respuesta) AS avg_respuesta FROM reactivos AS a1 INNER JOIN global AS a2 ";
+          for (j = 0; j < data2.length; j++) {
+            if(generales_checks[j] == data2[j].id && generales_checks[j] != undefined) {
+              query += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
+
+              for (k = 0; k < data1.length; k++) {
+                for (q = 0; q < segment_checks.length; q++) {
+                  if(segment_checks[q] == data1[k].respuesta && segment_checks[q] != undefined) {
+                    if(data1[k].general_id == 1) {
+                      query += " AND respuesta = " + data1[k].respuesta;
+                      
+                    } else {
+                      query += " AND respuesta = '" + data1[k].respuesta + "'";
+                      
+                    }
+                  }
+                }
+              }
+              query += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a2.folio_id";
+              
+            }
+          }
+
+          query += " WHERE a1.id = a2.reactivo_id GROUP BY factor;";
+
+        } else if (state == 3) {
+
+          query = "SELECT a1.rubro, COUNT(a2.respuesta) AS ct_respuesta FROM reactivos as a1 INNER JOIN global AS a2 ";
+          for (j = 0; j < data2.length; j++) {
+            if(generales_checks[j] == data2[j].id && generales_checks[j] != undefined) {
+              query += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
+
+              for (k = 0; k < data1.length; k++) {
+                for (q = 0; q < segment_checks.length; q++) {
+                  if(segment_checks[q] == data1[k].respuesta && segment_checks[q] != undefined) {
+                    if(data1[k].general_id == 1) {
+                      query += " AND respuesta = " + data1[k].respuesta;
+                      
+                    } else {
+                      query += " AND respuesta = '" + data1[k].respuesta + "'";
+                      
+                    }
+                  }
+                }
+              }
+              query += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a2.folio_id";
+              
+            }
+          }
+
+          if (cond == 1) {
+            query += " WHERE a1.id = a2.reactivo_id AND respuesta = 100 GROUP BY rubro;";
+          } else if (cond == 2) {
+            query += " WHERE a1.id = a2.reactivo_id AND respuesta = 75 OR respuesta = 80 GROUP BY rubro;";
+          } else if (cond == 3) {
+            query += " WHERE a1.id = a2.reactivo_id AND respuesta = 25 OR respuesta = 40 GROUP BY rubro;";
+          } else if (cond == 4) {
+            query += " WHERE a1.id = a2.reactivo_id AND respuesta = 0 GROUP BY rubro;";
+          }
+ 
+        } else if (state == 4) {
+
+          query = "SELECT a1.servicio, AVG(a2.respuesta) AS avg_respuesta FROM servicios as a1 INNER JOIN servicios_respuestas AS a2 ";
+          for (j = 0; j < data2.length; j++) {
+            if(generales_checks[j] == data2[j].id && generales_checks[j] != undefined) {
+              query += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
+
+              for (k = 0; k < data1.length; k++) {
+                for (q = 0; q < segment_checks.length; q++) {
+                  if(segment_checks[q] == data1[k].respuesta && segment_checks[q] != undefined) {
+                    if(data1[k].general_id == 1) {
+                      query += " AND respuesta = " + data1[k].respuesta;
+                      
+                    } else {
+                      query += " AND respuesta = '" + data1[k].respuesta + "'";
+                      
+                    }
+                  }
+                }
+              }
+              query += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a2.folio_id";
+              
+            }
+          }
+
+          query += " WHERE a1.id = a2.servicio_id AND a2.respuesta >= 0 GROUP BY servicio;";
+          
+        } else if (state == 5 && cond != 4) {
+
+          if (cond == 1) {
+            query = "SELECT a1.id, a1.nombre, a2.respuesta, COUNT(a2.respuesta) AS hcount FROM generales AS a1 INNER JOIN generales_respuestas AS a2 ";
+          } else if (cond == 2) {
+            query = "SELECT a1.id, a1.nombre, a2.respuesta AS g_resp , AVG(a3.respuesta) AS avg_resp FROM generales AS a1 INNER JOIN generales_respuestas AS a2 INNER JOIN global AS a3 ";
+          } else if (cond == 3) {
+            query = "SELECT a4.rubro, a1.id, a1.nombre, a2.respuesta AS g_resp , AVG(a3.respuesta) AS avg_resp FROM generales AS a1 INNER JOIN generales_respuestas AS a2 INNER JOIN global AS a3 INNER JOIN reactivos AS a4 ";
+          }
+
+          for (j = 0; j < data2.length; j++) {
+            if(generales_checks[j] == data2[j].id && generales_checks[j] != undefined) {
+              query += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
+
+              for (k = 0; k < data1.length; k++) {
+                for (q = 0; q < segment_checks.length; q++) {
+                  if(segment_checks[q] == data1[k].respuesta && segment_checks[q] != undefined) {
+                    if(data1[k].general_id == 1) {
+                      query += " AND respuesta = " + data1[k].respuesta;
+                      
+                    } else {
+                      query += " AND respuesta = '" + data1[k].respuesta + "'";
+                      
+                    }
+                  }
+                }
+              }
+              query += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a2.folio_id";
+              
+            }
+          }
+
+          if (cond == 1) {
+            query += " WHERE a1.id = a2.general_id GROUP BY id, respuesta;";
+          } else if (cond == 2) {
+            query += " WHERE a1.id = a2.general_id AND a2.folio_id = a3.folio_id GROUP BY id, g_resp;";
+          } else if (cond == 3) {
+            query += " WHERE a1.id = a2.general_id AND a2.folio_id = a3.folio_id AND a3.reactivo_id = a4.id GROUP BY rubro, id, g_resp;";
+          }
+          
+        } else if (state == 5 && cond == 4) {
+          query = "SELECT * FROM generales;";
+        } else if (state == 6) {
+          query = "SELECT a1.id, a1.rubro, a1.factor, a1.reactivo, AVG(a2.respuesta) AS avg_respuesta FROM reactivos AS a1 INNER JOIN global AS a2 ";
+          for (j = 0; j < data2.length; j++) {
+            if(generales_checks[j] == data2[j].id && generales_checks[j] != undefined) {
+              query += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
+
+              for (k = 0; k < data1.length; k++) {
+                for (q = 0; q < segment_checks.length; q++) {
+                  if(segment_checks[q] == data1[k].respuesta && segment_checks[q] != undefined) {
+                    if(data1[k].general_id == 1) {
+                      query += " AND respuesta = " + data1[k].respuesta;
+                      
+                    } else {
+                      query += " AND respuesta = '" + data1[k].respuesta + "'";
+                      
+                    }
+                  }
+                }
+              }
+              query += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a2.folio_id";
+              
+            }
+          }
+
+          if (cond == 1) {
+            query += " WHERE a1.id = a2.reactivo_id GROUP BY id ORDER BY avg_respuesta DESC;";
+          } else if (cond == 2) {
+            query += " WHERE a1.id = a2.reactivo_id GROUP BY id ORDER BY avg_respuesta DESC LIMIT 10;";
+          } else if (cond == 3) {
+            query += " WHERE a1.id = a2.reactivo_id GROUP BY id ORDER BY avg_respuesta ASC LIMIT 10;";
+          } 
+
+        } else if (state == 7) {
+          query = "SELECT a1.folio_id, a1.comentario FROM comentarios AS a1 ";
+          for (j = 0; j < data2.length; j++) {
+            if(generales_checks[j] == data2[j].id && generales_checks[j] != undefined) {
+              query += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
+
+              for (k = 0; k < data1.length; k++) {
+                for (q = 0; q < segment_checks.length; q++) {
+                  if(segment_checks[q] == data1[k].respuesta && segment_checks[q] != undefined) {
+                    if(data1[k].general_id == 1) {
+                      query += " AND respuesta = " + data1[k].respuesta;
+                      
+                    } else {
+                      query += " AND respuesta = '" + data1[k].respuesta + "'";
+                      
+                    }
+                  }
+                }
+              }
+              query += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a1.folio_id";
+              
+            }
+          }
+
+          query += " WHERE comentario <> '';";
+          
+        } else if (state == 8 && cond == 1) {
+          query = "SELECT * FROM otras_preguntas;";
+        } else if (state == 8 && cond == 2) {
+          query = "SELECT a1.folio_id, a1.pregunta_id, a1.respuesta FROM otras_respuestas AS a1 ";
+          for (j = 0; j < data2.length; j++) {
+            if(generales_checks[j] == data2[j].id && generales_checks[j] != undefined) {
+              query += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
+
+              for (k = 0; k < data1.length; k++) {
+                for (q = 0; q < segment_checks.length; q++) {
+                  if(segment_checks[q] == data1[k].respuesta && segment_checks[q] != undefined) {
+                    if(data1[k].general_id == 1) {
+                      query += " AND respuesta = " + data1[k].respuesta;
+                      
+                    } else {
+                      query += " AND respuesta = '" + data1[k].respuesta + "'";
+                      
+                    }
+                  }
+                }
+              }
+              query += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a1.folio_id";
+              
+            }
+          }
+
+          query += " WHERE respuesta <> '';";
         }
 
-        // console.log(create_query_global);
-        // console.log(create_query_generales);
-        // console.log(create_query_servicios);
-        // console.log(create_query_comentarios);
-        // console.log(create_query_otros);
-
-        con.query(create_query_global, function (err, data1, fields) {
-          if (err) throw err;
-        });
-        con.query(create_query_generales, function (err, data1, fields) {
-          if (err) throw err;
-        });
-        con.query(create_query_servicios, function (err, data1, fields) {
-          if (err) throw err;
-        });
-        con.query(create_query_comentarios, function (err, data1, fields) {
-          if (err) throw err;
-        });
-        con.query(create_query_otros, function (err, data1, fields) {
-          if (err) throw err;
-        });
-        
-      });
-    });
+        console.log(query);
+        return query;
 }
 
 function parse_reactivos() {
@@ -731,6 +821,7 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
     }
 })
 
+/*
 app.get('/clima_builder', function (req, res) {
   dbname = req.query.dbname;
   if (dbname != 'undefined') {
@@ -742,22 +833,42 @@ app.get('/clima_builder', function (req, res) {
   // Get
   var sql1 = "SELECT `general_id`, `nombre`, `respuesta`, `planta` FROM `generales_respuestas` INNER JOIN `generales` ON `generales_respuestas`.`general_id` = `generales`.`id` LEFT JOIN `plantas` ON `generales_respuestas`.`respuesta` = `plantas`.`id` GROUP BY `respuesta` ORDER BY `general_id`";
   var sql2 = "SELECT * FROM `generales`";
-    con.query(sql1, function (err, data1, fields) {
+    con.query(sql1, function (err, res1, fields) {
       if (err) throw err;
-      con.query(sql2, function (err, data2, fields) {
+      con.query(sql2, function (err, res2, fields) {
         if (err) throw err;
         let state = 0;
         let crumb = 'Query ' + dbname;
-        res.render('clima_builder', {state, crumb, data1, data2, user, type, comp});
+        data_gen = res1;
+        data_seg = res2;
+        res.render('clima_builder', {state, crumb, user, type, comp, data_gen, data_seg});
       });
     });
 })
+*/
 
 app.get('/resultados_clima', function (req, res) {
   dbname = req.query.dbname;
-  let state = 0;
-  let crumb = 'Resultados ' + dbname;
-  res.render('resultados_clima', {state, crumb, user, type, comp});
+  if (dbname != 'undefined') {
+    con.changeUser({database : dbname}, function(err) {
+      if (err) throw err;
+      // console.log('Changed to DB ' + dbname)
+    });
+  }
+
+  var sql1 = "SELECT `general_id`, `nombre`, `respuesta`, `planta` FROM `generales_respuestas` INNER JOIN `generales` ON `generales_respuestas`.`general_id` = `generales`.`id` LEFT JOIN `plantas` ON `generales_respuestas`.`respuesta` = `plantas`.`id` GROUP BY `respuesta` ORDER BY `general_id`";
+  var sql2 = "SELECT * FROM `generales`";
+    con.query(sql1, function (err, res1, fields) {
+      if (err) throw err;
+      con.query(sql2, function (err, res2, fields) {
+        if (err) throw err;
+        let state = 0;
+        let crumb = 'Resultados ' + dbname;
+        data_gen = res1;
+        data_seg = res2;
+        res.render('resultados_clima', {state, crumb, user, type, comp, data_gen, data_seg});
+      });
+    });
 })
 
 app.post('/resultados_clima', function (req, res) {
@@ -766,6 +877,7 @@ app.post('/resultados_clima', function (req, res) {
   global_check = parseInt(req.body.global_check);
   generales_length = parseInt(req.body.generales_length);
   segment_length = parseInt(req.body.segment_length);
+  recalc = parseInt(req.body.recalc);
   var generales_checks = [];
   var temp_checks = [];
   var segment_checks = [];
@@ -912,42 +1024,48 @@ app.post('/resultados_clima', function (req, res) {
     }
   }
   
-  if (state == 0) {
+  var mainq1 = "SELECT `general_id`, `nombre`, `respuesta`, `planta` FROM `generales_respuestas` INNER JOIN `generales` ON `generales_respuestas`.`general_id` = `generales`.`id` LEFT JOIN `plantas` ON `generales_respuestas`.`respuesta` = `plantas`.`id` GROUP BY `respuesta` ORDER BY `general_id`";
+  var mainq2 = "SELECT * FROM `generales`";
+
+  con.query(mainq1, function (err, maind1, fields) {
+    if (err) throw err;
+    con.query(mainq2, function (err, maind2, fields) {
+      if (err) throw err;
+
+      if (state == 0) {
     let crumb = 'Resultados ' + dbname;
 
     //console.log(generales_checks);
     //console.log(segment_checks);
     //console.log(temp_checks);
-    if (global_check == 0 && !empty_generals) {
-      create_segmented_tables(generales_checks, segment_checks, function(err, result)  {
-        if (err) throw err;
-      });
-    } else {
-      create_temporary_tables(function(err, result)  {
-        if (err) throw err;
-      });
-    }
 
-    res.render('resultados_clima', {state, crumb, user, type, comp});
+    res.render('resultados_clima', {state, crumb, user, type, comp, data_gen, data_seg});
   } else if (state == 1) {
-    con.query("SELECT rubro, AVG(respuesta) AS avg_respuesta FROM `reactivos` INNER JOIN `global_temp` WHERE reactivos.id = global_temp.reactivo_id GROUP BY rubro ORDER BY avg_respuesta DESC", function (err, result, fields) {
+
+    sql = query_builder(state, 0, generales_checks, segment_checks, maind1, maind2);
+
+    con.query(sql, function (err, result, fields) {
       if (err) throw err;
       let data = result;
       let crumb = 'Resultados ' + dbname;
-      res.render('resultados_clima', {state, crumb, data, user, type, comp});
+      res.render('resultados_clima', {state, crumb, data, user, type, comp, data_gen, data_seg});
     });
   } else if (state == 2) {
-    con.query("SELECT rubro, factor, AVG(respuesta) AS avg_respuesta FROM `reactivos` INNER JOIN `global_temp` WHERE reactivos.id = global_temp.reactivo_id GROUP BY factor", function (err, result, fields) {
+
+    sql = query_builder(state, 0, generales_checks, segment_checks, maind1, maind2);
+
+    con.query(sql, function (err, result, fields) {
       if (err) throw err;
       let data = result;
       let crumb = 'Resultados ' + dbname;
-      res.render('resultados_clima', {state, crumb, data, user, type, comp});
+      res.render('resultados_clima', {state, crumb, data, user, type, comp, data_gen, data_seg});
     });
   } else if (state == 3) {
-    var sql1 = "SELECT rubro, COUNT(respuesta) AS ct_respuesta FROM `reactivos` INNER JOIN `global_temp` WHERE reactivos.id = global_temp.reactivo_id AND respuesta = 100 GROUP BY rubro";
-    var sql2 = "SELECT rubro, COUNT(respuesta) AS ct_respuesta FROM `reactivos` INNER JOIN `global_temp` WHERE reactivos.id = global_temp.reactivo_id AND respuesta = 75 OR respuesta = 80 GROUP BY rubro";
-    var sql3 = "SELECT rubro, COUNT(respuesta) AS ct_respuesta FROM `reactivos` INNER JOIN `global_temp` WHERE reactivos.id = global_temp.reactivo_id AND respuesta = 25 OR respuesta = 40 GROUP BY rubro";
-    var sql4 = "SELECT rubro, COUNT(respuesta) AS ct_respuesta FROM `reactivos` INNER JOIN `global_temp` WHERE reactivos.id = global_temp.reactivo_id AND respuesta = 0 GROUP BY rubro";
+
+    var sql1 = query_builder(state, 1, generales_checks, segment_checks, maind1, maind2);
+    var sql2 = query_builder(state, 2, generales_checks, segment_checks, maind1, maind2);
+    var sql3 = query_builder(state, 3, generales_checks, segment_checks, maind1, maind2);
+    var sql4 = query_builder(state, 4, generales_checks, segment_checks, maind1, maind2);
 
     con.query(sql1, function (err, data1, fields) {
       if (err) throw err;
@@ -958,23 +1076,27 @@ app.post('/resultados_clima', function (req, res) {
           con.query(sql4, function (err, data4, fields) {
             if (err) throw err;
             let crumb = 'Resultados ' + dbname;
-            res.render('resultados_prop', {state, crumb, data1, data2, data3, data4, user, type, comp});     
+            res.render('resultados_prop', {state, crumb, data1, data2, data3, data4, user, type, comp, data_gen, data_seg});     
           });
         });
       });
     });
   } else if (state == 4) {
-    con.query("SELECT servicio, AVG(respuesta) AS avg_respuesta FROM `servicios` INNER JOIN `servicios_respuestas_temp` WHERE servicios.id = servicios_respuestas_temp.servicio_id AND respuesta >= 0 GROUP BY servicio", function (err, result, fields) {
+
+    sql = query_builder(state, 0, generales_checks, segment_checks, maind1, maind2);
+
+    con.query(sql, function (err, result, fields) {
       if (err) throw err;
       let data = result;
       let crumb = 'Resultados ' + dbname;
-      res.render('resultados_clima', {state, crumb, data, user, type, comp});
+      res.render('resultados_clima', {state, crumb, data, user, type, comp, data_gen, data_seg});
     });
   } else if (state == 5) {
-    var sql1 = "SELECT id, nombre, respuesta, COUNT(respuesta) AS hcount FROM `generales` INNER JOIN generales_respuestas_temp WHERE generales.id = generales_respuestas_temp.general_id GROUP BY id, respuesta";
-    var sql2 = "SELECT a.id, a.nombre, b.respuesta AS g_resp, AVG(c.respuesta) AS avg_resp FROM generales AS a INNER JOIN generales_respuestas_temp AS b INNER JOIN global_temp AS c WHERE a.id = b.general_id AND b.folio_id = c.folio_id GROUP BY id, g_resp";
-    var sql3 = "SELECT d.rubro, a.id, a.nombre, b.respuesta AS g_resp, AVG(c.respuesta) AS avg_resp FROM generales AS a INNER JOIN generales_respuestas_temp AS b INNER JOIN global_temp AS c INNER JOIN reactivos AS d WHERE a.id = b.general_id AND b.folio_id = c.folio_id AND c.reactivo_id = d.id GROUP BY rubro, id, g_resp";
-    var sql4 = "SELECT * FROM generales";
+
+    var sql1 = query_builder(state, 1, generales_checks, segment_checks, maind1, maind2);
+    var sql2 = query_builder(state, 2, generales_checks, segment_checks, maind1, maind2);
+    var sql3 = query_builder(state, 3, generales_checks, segment_checks, maind1, maind2);
+    var sql4 = query_builder(state, 4, generales_checks, segment_checks, maind1, maind2);
 
     con.query(sql1, function (err, data1, fields) {
       if (err) throw err;
@@ -985,15 +1107,16 @@ app.post('/resultados_clima', function (req, res) {
           con.query(sql4, function (err, data4, fields) {
             if (err) throw err;
             let crumb = 'Resultados ' + dbname;
-            res.render('resultados_clima', {state, crumb, data1, data2, data3, data4, user, type, comp});     
+            res.render('resultados_clima', {state, crumb, data1, data2, data3, data4, user, type, comp, data_gen, data_seg});     
           });
         });
       });
     });
   } else if (state == 6) {
-    var sql1 = "SELECT id, rubro, factor, reactivo, AVG(respuesta) AS avg_respuesta FROM reactivos INNER JOIN global_temp WHERE reactivos.id = global_temp.reactivo_id GROUP BY id ORDER BY avg_respuesta DESC";
-    var sql2 = "SELECT id, rubro, factor, reactivo, AVG(respuesta) AS avg_respuesta FROM `reactivos` INNER JOIN `global_temp` WHERE reactivos.id = global_temp.reactivo_id GROUP BY id ORDER BY avg_respuesta DESC LIMIT 10";
-    var sql3 = "SELECT id, rubro, factor, reactivo, AVG(respuesta) AS avg_respuesta FROM `reactivos` INNER JOIN `global_temp` WHERE reactivos.id = global_temp.reactivo_id GROUP BY id ORDER BY avg_respuesta ASC LIMIT 10";
+
+    var sql1 = query_builder(state, 1, generales_checks, segment_checks, maind1, maind2);
+    var sql2 = query_builder(state, 2, generales_checks, segment_checks, maind1, maind2);
+    var sql3 = query_builder(state, 3, generales_checks, segment_checks, maind1, maind2);
 
     con.query(sql1, function (err, data1, fields) {
       if (err) throw err;
@@ -1002,31 +1125,38 @@ app.post('/resultados_clima', function (req, res) {
         con.query(sql3, function (err, data3, fields) {
           if (err) throw err;
           let crumb = 'Resultados ' + dbname;
-          res.render('resultados_clima', {state, crumb, data1, data2, data3, user, type, comp});
+          res.render('resultados_clima', {state, crumb, data1, data2, data3, user, type, comp, data_gen, data_seg});
         });
       });
     });
   } else if (state == 7) {
-    var sql = "SELECT * FROM comentarios_temp WHERE comentario <> ''";
+
+    var sql = query_builder(state, 0, generales_checks, segment_checks, maind1, maind2);
+    console.log(sql);
     con.query(sql, function (err, result, fields) {
       if (err) throw err;
       let data = result;
       let crumb = 'Resultados ' + dbname;
-      res.render('resultados_clima', {state, crumb, data, user, type, comp});
+      res.render('resultados_clima', {state, crumb, data, user, type, comp, data_gen, data_seg});
     });
   } else if (state == 8) {
-    var sql1 = "SELECT * FROM otras_preguntas";
-    var sql2 = "SELECT * FROM otras_respuestas_temp WHERE respuesta <> ''";
+
+    var sql1 = query_builder(state, 1, generales_checks, segment_checks, maind1, maind2);
+    var sql2 = query_builder(state, 2, generales_checks, segment_checks, maind1, maind2);
     
     con.query(sql1, function (err, data1, fields) {
       if (err) throw err;
       con.query(sql2, function (err, data2, fields) {
         if (err) throw err;
         let crumb = 'Resultados ' + dbname;
-        res.render('resultados_clima', {state, crumb, data1, data2, user, type, comp});
+        res.render('resultados_clima', {state, crumb, data1, data2, user, type, comp, data_gen, data_seg});
       });
     });
   }
+
+    });
+  });
+
 })
 
 
