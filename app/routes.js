@@ -375,7 +375,7 @@ function query_builder(state, cond, generales_checks, segment_checks, data1, dat
           query += " WHERE respuesta <> '';";
         }
 
-        console.log(query);
+        //console.log(query);
         return query;
 }
 
@@ -1132,7 +1132,7 @@ app.post('/resultados_clima', function (req, res) {
   } else if (state == 7) {
 
     var sql = query_builder(state, 0, generales_checks, segment_checks, maind1, maind2);
-    console.log(sql);
+    //console.log(sql);
     con.query(sql, function (err, result, fields) {
       if (err) throw err;
       let data = result;
