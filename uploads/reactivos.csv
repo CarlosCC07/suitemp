@@ -1,74 +1,83 @@
-1,Sentido de Pertenencia,Relación Empresa-Familia-Amigos,A mi familia le gusta que yo trabaje en esta Empresa.
-2,Estilos de Liderazgo y Supervisión,Compromiso en equipo,Pertenezco a un grupo comprometido con el trabajo en equipo.
-3,Estructura y Rumbo Organizacional,Valores,Existe espíritu de servicio en las relaciones de trabajo.
-4,Estructura y Rumbo Organizacional,Comunicación Organizacional,La comunicación sobre los resultados de la Empresa es clara y transparente.
-5,Desafío y Oportunidad de Desarrollo,Capacitación,En mi trabajo la gente está motivada en encontrar soluciones a los problemas relacionados con el trabajo.
-6,Estilos de Liderazgo y Supervisión,Compromiso en equipo,En mi departamento existe compañerismo y cooperación.
-7,Estilos de Liderazgo y Supervisión,Liderazgo,Considero líder a mi jefe.
-8,Estructura y Rumbo Organizacional,Valores,Soy tratado con dignidad y respeto en la Empresa.
-9,Reconocimiento y Recompensa,Promociones y ascensos,La Organización reconoce a las personas que tienen un desempeño sobresaliente.
-10,Estructura y rumbo organizacional,Calidad y enfoque al cliente,Conozco el sistema de gestión de calidad de ADS Mexicana.
-11,Servicios y Condiciones de Trabajo,Seguridad Industrial,En la Empresa se nos capacita sobre la seguridad en el trabajo.
-12,Estructura y Rumbo Organizacional,Comunicación Organizacional,La comunicación que se da entre las personas en la Organización facilita mi trabajo.
-13,Estructura y rumbo organizacional,Calidad y enfoque al cliente,Considero adecuado el Sistema de Calidad de la Empresa.
-14,Reconocimiento y Recompensa,Promociones y ascensos,Conozco y entiendo los criterios para cambiar o ascender a un puesto superior.
-15,Servicios y Condiciones de Trabajo,Equipo y herramientas,Tengo el equipo / herramientas y recursos para realizar mi trabajo eficazmente.
-16,Servicios y Condiciones de Trabajo,Salud Ocupacional,La Empresa cuenta con programas de prevención de Enfermedades.
-17,Servicios y Condiciones de Trabajo,Ambiente de trabajo,El ambiente de trabajo es agradable y positivo.
-18,Servicios y Condiciones de Trabajo,Equipo y herramientas,Mis compañeros cuidan los recursos de la Empresa al realizar su trabajo.
-19,Estilos de Liderazgo y Supervisión,Comunicación Jefe-Colaborador,Cuento con el apoyo de mi jefe para resolver las dudas e inquietudes sobre mi trabajo.
-20,Estilos de Liderazgo y Supervisión,Compromiso en equipo,Cuando mi departamento necesita apoyo de otras áreas se recibe oportunamente.
-21,Estilos de Liderazgo y Supervisión,Relación Jefe-Colaborador,Obtengo reconocimiento por parte de mi jefe directo cuando hago bien mi trabajo.
-22,Estilos de Liderazgo y Supervisión,Liderazgo,Considero que mi jefe maneja adecuadamente mi área.
-23,Reconocimiento y Recompensa,Compensación,Considero que las prestaciones de mi Empresa son competitivas.
-24,Estructura y Rumbo Organizacional,Comunicación Organizacional,Considero que en la Empresa existen canales adecuados de comunicación.
-25,Sentido de Pertenencia,Contribución,Entiendo como mi trabajo aporta a los objetivos generales de la Empresa.
-26,Estructura y Rumbo Organizacional,Valores,"Conozco la filosofía de la Empresa (Misión, Visión, Políticas de operación y Valores)."
-27,Sentido de Pertenencia,Contribución,Trabajar en ADS Mexicana es de gran valor en mi desarrollo profesional.
-28,Estructura y rumbo organizacional,Calidad y enfoque al cliente,Conozco la política y los objetivos de calidad de la Empresa.
-29,Sentido de Pertenencia,Contribución,Tengo claro cuáles son los objetivos y expectativas que la Empresa tiene de mi trabajo.
-30,Reconocimiento y Recompensa,Compensación,El sueldo que me pagan es tan competitivo como el de otras empresas.
-31,Sentido de Pertenencia,Contribución,Considero que tengo un trabajo interesante y motivador.
-32,Sentido de Pertenencia,Contribución,Son consideradas las ideas que expreso en mi área de trabajo.
-33,Estilos de Liderazgo y Supervisión,Compromiso en equipo,"Si tengo problemas de trabajo, puedo contar con mis compañeros para resolverlos."
-34,Estructura y rumbo organizacional,Calidad y enfoque al cliente,En la Empresa hacemos trabajos con calidad.
-35,Sentido de Pertenencia,Relación Empresa-Familia-Amigos,Me gusta compartir con mi familia y amigos lo que me sucede en la Empresa.
-36,Estilos de Liderazgo y Supervisión,Relación Jefe-Colaborador,Tengo la confianza para expresar mi punto de vista a mi jefe directo aún cuando no estemos de acuerdo.
-37,Desafío y Oportunidad de Desarrollo,Capacitación,Mi opinión es tomada en cuenta para mi capacitación.
-38,Desafío y Oportunidad de Desarrollo,Empowermet,Estoy involucrado en las decisiones que afectan mi trabajo.
-39,Sentido de Pertenencia,Estabilidad en el trabajo,Está en mis planes seguir laborando en ADS Mexicana.
-40,Servicios y Condiciones de Trabajo,Seguridad Industrial,Mis compañeros siguen las normas de Seguridad Industrial.
-41,Desafío y Oportunidad de Desarrollo,Empowermet,Mi opinión cuenta para la toma de decisiones en mi departamento.
-42,Estilos de Liderazgo y Supervisión,Comunicación Jefe-Colaborador,Mi jefe escucha y está atento a las situaciones laborales del área.
-43,Sentido de Pertenencia,Relación Empresa-Familia-Amigos,Mi carga de trabajo me permite dedicarle tiempo a mi familia.
-44,Desafío y Oportunidad de Desarrollo,Capacitación,Me siento capacitado para desempeñar mi trabajo.
-45,Estilos de Liderazgo y Supervisión,Comunicación Jefe-Colaborador,Considero que las indicaciones brindadas por mi jefe directo son claras.
-46,Estructura y Rumbo Organizacional,Valores,Considero que mis compañeros aplican los valores de la Empresa.
-47,Desafío y Oportunidad de Desarrollo,Capacitación,Los cursos y pláticas que he recibido de la Empresa están bien organizados.
-48,Servicios y Condiciones de Trabajo,Servicios e Instalaciones,"Las instalaciones de la Empresa (baños, ventilación, luz, aire acondicionado, etc.) contribuyen al mejor desempeño de mi trabajo."
-49,Servicios y Condiciones de Trabajo,Seguridad Industrial,Mi área de trabajo es un lugar seguro para trabajar.
-50,Estructura y Rumbo Organizacional,Valores,Mi trabajo es reconocido como un elemento que agrega valor a la Empresa.
-51,Desafío y Oportunidad de Desarrollo,Capacitación,La capacitación que se da en la Empresa ayuda a mejorar la productividad.
-52,Estructura y rumbo organizacional,Calidad y enfoque al cliente,En la Empresa trabajamos con base en los Sistemas de calidad.
-53,Desafío y Oportunidad de Desarrollo,Capacitación,Los planes de capacitación se adecuan a mis necesidades de desarrollo profesional y personal en la Empresa.
-54,Reconocimiento y Recompensa,Promociones y ascensos,Estoy de acuerdo con las promociones o ascensos que se han dado en la Empresa.
-55,Estilos de Liderazgo y Supervisión,Liderazgo,Mi jefe fomenta el aprendizaje y la formación a largo plazo de todos sus colaboradores.
-56,Estilos de Liderazgo y Supervisión,Compromiso en equipo,Mi jefe directo se preocupa por mantener un buen ambiente de trabajo en el departamento.
-57,Estilos de Liderazgo y Supervisión,Relación Jefe-Colaborador,La relación que tengo con mi jefe es de respeto.
-58,Sentido de Pertenencia,Estabilidad en el trabajo,La estabilidad de mi trabajo en la Empresa depende de mi buen desempeño.
-59,Estilos de Liderazgo y Supervisión,Características del trabajo,Conozco los resultados que se esperan de mi trabajo.
-60,Desafío y Oportunidad de Desarrollo,Empowermet,Aplico mis conocimientos y habilidades en mi trabajo diario.
-61,Sentido de Pertenencia,Integración a la empresa,Me gusta mi trabajo.
-62,Estilos de Liderazgo y Supervisión,Características del trabajo,Las metas y funciones con los que estoy siendo evaluado están claramente definidas.
-63,Estilos de Liderazgo y Supervisión,Características del trabajo,Las decisiones que se toman en mi unidad de trabajo resultan sumamente efectivas.
-64,Servicios y Condiciones de Trabajo,Salud Ocupacional,La Empresa promueve la práctica de algún deporte o ejercicio.
-65,Sentido de Pertenencia,Estabilidad en el trabajo,Ante situaciones difíciles cuento con el apoyo y comprensión de la Empresa.
-66,Reconocimiento y Recompensa,Promociones y ascensos,Las promociones son para quien logra resultados.
-67,Servicios y Condiciones de Trabajo,Servicios e Instalaciones,Las condiciones físicas del área de trabajo son agradables para trabajar.
-68,Estructura y rumbo organizacional,Calidad y enfoque al cliente,El compromiso de la Empresa con la calidad es evidente en lo que hacemos día a día.
-69,Servicios y Condiciones de Trabajo,Salud Ocupacional,La Empresa nos brinda información para llevar una vida saludable.
-70,Desafío y Oportunidad de Desarrollo,Capacitación,El tipo de cursos y pláticas que mi Empresa brinda fortalecen mis capacidades profesionales.
-71,Sentido de Pertenencia,Integración a la empresa,Me siento orgulloso (a) de pertenecer a ADS Mexicana.
-72,Servicios y Condiciones de Trabajo,Equipo y herramientas,El equipo de trabajo se actualiza con la frecuencia necesaria.
-73,Desafío y Oportunidad de Desarrollo,Capacitación,Estoy satisfecho con la cantidad de cursos y pláticas que la Empresa me ha brindado.
-74,Reconocimiento y Recompensa,Compensación,Normalmente recibo mi pago en tiempo y forma.
+1,Reconocimiento y Recompensa,Promociones y Ascensos,"En la empresa las personas que tienen un buen desempeño, tienen oportunidades de desarrollo."
+2,Reconocimiento y Recompensa,Reconocimiento,En la empresa todos somos tomados en cuenta como personas no sólo como colaboradores.
+3,Desafío y Oportunidad de Desarrollo,Motivación,Mi trabajo me conduce al desarrollo de mi plan de vida y carrera.
+4,Reconocimiento y Recompensa,Reconocimiento,Mi opinión cuenta para la toma de decisiones en mi departamento.
+5,Desafío y Oportunidad de Desarrollo,Capacitación,Me siento capacitado para desempeñar mi trabajo.
+6,Estructura y Rumbo Organizacional,Comunicación Organizacional,Estoy oportunamente comunicado acerca de lo que sucede en la empresa.
+7,Estilos de Liderazgo y Supervisión,Comunicación Jefe-Colaborador,Cuento con el apoyo de mi jefe para resolver las dudas e inquietudes sobre mi trabajo.
+8,Sentido de Pertenencia,"Eventos deportivos, sociales y culturales","La calidad de los eventos deportivos, sociales y culturales que organiza la empresa es buena."
+9,Estilos de Liderazgo y Supervisión,Compromiso en equipo,En mi departamento existe compañerismo y cooperación.
+10,Sentido de Pertenencia,Integración a la Empresa,Recomendaría la empresa como un buen lugar para trabajar.
+11,Servicios y Condiciones de Trabajo,Instalaciones de la empresa,La empresa se preocupa porque tengamos instalaciones y servicios adecuados.
+12,Estructura y Rumbo Organizacional,Valores,Conozco los valores de la empresa.
+13,Servicios y Condiciones de Trabajo,Maquinaria y herramientas,La empresa me proporciona las herramientas necesarias para realizar mi trabajo con calidad.
+14,Estructura y Rumbo Organizacional,Valores,Practico los valores de la empresa.
+15,Estilos de Liderazgo y Supervisión,Comunicación Jefe-Colaborador,Mi jefe se interesa en escuchar lo que tengo que decir.
+16,Servicios y Condiciones de Trabajo,Maquinaria y herramientas,Cuento con el equipo y herramientas suficientes para desempeñar mi trabajo.
+17,Estilos de Liderazgo y Supervisión,Relación Jefe-Colaborador,La información que recibo de mi jefe para hacer mi trabajo es adecuada y suficiente.
+18,Estilos de Liderazgo y Supervisión,Relación Jefe-Colaborador,Cuando cometo un error el trato de mi jefe es respetuoso y constructivo.
+19,Sentido de Pertenencia,Contribución,Conozco bien lo que la empresa espera de mi trabajo.
+20,Desafío y Oportunidad de Desarrollo,Capacitación,La cantidad de cursos y pláticas que la empresa me ha brindado ha sido la adecuada.
+21,Desafío y Oportunidad de Desarrollo,Motivación,Tengo interés en mejorar la forma en cómo hago mi trabajo.
+22,Servicios y Condiciones de Trabajo,Seguridad Industrial,Las condiciones de seguridad de mi área de trabajo son adecuadas.
+23,Sentido de Pertenencia,Integración a la Empresa,No me iría de la empresa si me ofrecieran un puesto similar en otra empresa.
+24,Estilos de Liderazgo y Supervisión,Relación Jefe-Colaborador,La relación que tengo con mi jefe es de respeto.
+25,Estructura y Rumbo Organizacional,Mejora Continua,En la empresa la calidad es un valor importante.
+26,Reconocimiento y Recompensa,Compensación,En mi empresa existen buenas prestaciones.
+27,Servicios y Condiciones de Trabajo,Ambiente de Trabajo,En la empresa se me trata con dignidad y respeto.
+28,Reconocimiento y Recompensa,Reconocimiento,La empresa considera a su personal como un elemento de gran valor.
+29,Reconocimiento y Recompensa,Compensación,"Comparado con otras empresas, el salario que se me paga es bueno."
+30,Sentido de Pertenencia,Estabilidad en el Empleo,Puedo decirle a mi jefe libremente cuando estoy en desacuerdo con él.
+31,Servicios y Condiciones de Trabajo,Instalaciones de la empresa,"Las instalaciones de la empresa (baños, ventilación, luz, aire acondicionado, etc.) contribuyen al mejor desempeño de mi trabajo."
+32,Reconocimiento y Recompensa,Promociones y Ascensos,La asignación de categorías y promociones se maneja de forma justa y adecuada.
+33,Servicios y Condiciones de Trabajo,Relación con Compañeros,Cuando cometo un error el trato de mis compañeros es respetuoso y constructivo.
+34,Estilos de Liderazgo y Supervisión,Relación Jefe-Colaborador,Considero que mi jefe maneja adecuadamente los conflictos de mi departamento.
+35,Reconocimiento y Recompensa,Evaluación del Desempeño,Soy retroalimentado acerca de mis fuerzas y debilidades.
+36,Estructura y Rumbo Organizacional,Mejora Continua,En la empresa valoramos la calidad.
+37,Desafío y Oportunidad de Desarrollo,Capacitación,El tipo de cursos y pláticas que mi empresa me ha brindado me sirven para crecer en lo personal.
+38,Desafío y Oportunidad de Desarrollo,Motivación,Me gusta mi trabajo.
+39,Sentido de Pertenencia,Relación Empresa-Familia-Amigos,A mi familia y amigos les gusta que yo trabaje en esta empresa.
+40,Sentido de Pertenencia,Contribución,Mis resultados contribuyen al éxito de la empresa.
+41,Estructura y Rumbo Organizacional,Mejora Continua,Conozco la política y los objetivos de calidad de la empresa.
+42,Reconocimiento y Recompensa,Reconocimiento,Recibo reconocimiento cuando hago bien mi trabajo.
+43,Estructura y Rumbo Organizacional,Comunicación Organizacional,Considero que existen buenos canales de comunicación entre los departamentos de la empresa.
+44,Estructura y Rumbo Organizacional,Comunicación Organizacional,En general en la empresa la comunicación entre las personas facilita el desempeño del trabajo.
+45,Estilos de Liderazgo y Supervisión,Comunicación Jefe-Colaborador,Me queda muy claro lo que mi jefe espera de mi.
+46,Servicios y Condiciones de Trabajo,Ambiente de trabajo,El ambiente de trabajo es agradable y positivo.
+47,Desafío y Oportunidad de Desarrollo,Características de Trabajo,Los resultados esperados de mi trabajo están claramente definidos.
+48,Desafío y Oportunidad de Desarrollo,Capacitación,Los cursos y pláticas que he recibido de la empresa están bien organizados.
+49,Estructura y Rumbo Organizacional,Mejora Continua,Participo en la Mejora Continua de mi departamento.
+50,Estilos de Liderazgo y Supervisión,Compromiso en equipo,Cuando mi departamento necesita apoyo de otras áreas se recibe oportunamente.
+51,Estructura y Rumbo Organizacional,Valores,Me identifico con los valores de la empresa.
+52,Estilos de Liderazgo y Supervisión,Compromiso en equipo,"Si tengo problemas de trabajo, puedo contar con mis compañeros para resolverlos."
+53,Desafío y Oportunidad de Desarrollo,Capacitación,Los programas internos de capacitación y desarrollo han contribuido al mejor desempeño de mi trabajo.
+54,Servicios y Condiciones de Trabajo,Seguridad Industrial,Mis compañeros siguen las políticas de seguridad industrial.
+55,Estilos de Liderazgo y Supervisión,Compromiso en equipo,Existe lealtad en el grupo de trabajo.
+56,Sentido de Pertenencia,Integración a la Empresa,Ante situaciones difíciles cuento con el apoyo y comprensión de la empresa.
+57,Sentido de Pertenencia,Integración a la Empresa,Me siento orgulloso de trabajar en la empresa.
+58,Estructura y Rumbo Organizacional,Valores,Existe espíritu de servicio en las relaciones de trabajo.
+59,Sentido de Pertenencia,Estabilidad en el Empleo,El hacer bien mi trabajo me da estabilidad en la empresa.
+60,Estructura y Rumbo Organizacional,Mejora Continua,La empresa está preocupada porque participemos en mejorar la calidad.
+61,Sentido de Pertenencia,Relación Empresa-Familia-Amigos,Mi carga de trabajo me permite dedicarle tiempo a mi familia.
+62,Servicios y Condiciones de Trabajo,Instalaciones de la empresa,Las condiciones físicas del área son agradables para trabajar.
+63,Estilos de Liderazgo y Supervisión,Relación Jefe-Colaborador,En lo general considero a mi jefe un buen líder.
+64,Servicios y Condiciones de Trabajo,Relación con Compañeros,La relación que tengo con mis compañeros es de respeto.
+65,Desafío y Oportunidad de Desarrollo,Motivación,Me siento motivado en mi trabajo.
+66,Sentido de Pertenencia,Relación Empresa-Familia-Amigos,Recibo comentarios positivos de familiares y amigos acerca de la empresa.
+67,Reconocimiento y Recompensa,Promociones y ascensos,En la empresa se promueve a quién logra resultados.
+68,Desafío y Oportunidad de Desarrollo,Motivación,Tengo un trabajo que es interesante.
+69,Estilos de Liderazgo y Supervisión,Compromiso en equipo,Las decisiones que se toman en mi unidad de trabajo resultan sumamente efectivas.
+70,Estilos de Liderazgo y Supervisión,Compromiso en equipo,Tengo presión por falta de apoyo de otros departamentos para realizar mi trabajo.
+71,Sentido de Pertenencia,Integración a la Empresa,Trabajar en esta empresa es de gran valor para mi desarrollo profesional.
+72,Desafío y Oportunidad de Desarrollo,Capacitación,En mi trabajo la gente está capacitada para tomar la iniciativa y resolver problemas.
+73,Desafío y Oportunidad de Desarrollo,Características de Trabajo,Tengo claras las funciones que debo desarrollar en mi puesto.
+74,Desafío y Oportunidad de Desarrollo,Capacitación,La capacitación está relacionada con los requerimientos de mi trabajo.
+75,Sentido de Pertenencia,Contribución,Considero que el trabajo que realizo es importante para la empresa.
+76,Desafío y Oportunidad de Desarrollo,Capacitación,Mi opinión es tomada en cuenta para mi capacitación.
+77,Sentido de Pertenencia,Contribución,Hago buen uso de mis conocimientos y habilidades en mi trabajo.
+78,Servicios y Condiciones de Trabajo,Seguridad Industrial,En la empresa se nos capacita sobre la seguridad en el trabajo.
+79,Desafío y Oportunidad de Desarrollo,Capacitación,La capacitación que se da en la empresa ayuda a mejorar la productividad.
+80,Servicios y Condiciones de Trabajo,Maquinaria y herramientas,El equipo de trabajo se actualiza con la frecuencia necesaria.
+81,Servicios y Condiciones de Trabajo,Instalaciones de la empresa,El nivel de ruido es adecuado en mi lugar de trabajo.
+82,Estilos de Liderazgo y Supervisión,Compromiso en equipo,Mi jefe motiva y facilita los resultados de nuestro equipo de trabajo.
+83,Estructura y Rumbo Organizacional,Mejora Continua,La empresa fomenta la productividad de los colaboradores.

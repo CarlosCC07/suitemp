@@ -53,9 +53,9 @@ function delete_study(study_id) {
   });
 }
 
-function create_tables(dbname, se, ce, oe) {
+function create_tables(dbname, se, ar, ld, ce, oe) {
   
-  var sql_table_empresa = "CREATE TABLE empresa (id INT PRIMARY KEY, nombre VARCHAR(255), year INT, escala INT, num_reactivos INT, num_generales INT, num_servicios INT, comentarios INT, num_otras INT)";
+  var sql_table_empresa = "CREATE TABLE empresa (id INT PRIMARY KEY, nombre VARCHAR(255), year INT, escala INT, num_reactivos INT, num_generales INT, num_servicios INT, num_areas INT, lideres INT, comentarios INT, num_otras INT)";
   con.query(sql_table_empresa, function (err, result) {
     if (err) throw err;
     // console.log("Table empresa created successfully");
@@ -105,11 +105,33 @@ function create_tables(dbname, se, ce, oe) {
     });
   }
 
+  if (ar == 0) {
+    var sql_table_areas = "CREATE TABLE areas (id INT AUTO_INCREMENT PRIMARY KEY, area VARCHAR(255))";
+    con.query(sql_table_areas, function (err, result) {
+      if (err) throw err;
+      // console.log("Table areas created successfully");
+    });
+
+    var sql_table_areas_resp = "CREATE TABLE areas_respuestas (folio_id INT, area_id INT, respuesta INT)";
+    con.query(sql_table_areas_resp, function (err, result) {
+      if (err) throw err;
+      // console.log("Table areas_respuestas created successfully");
+    });
+  }
+
+  if (ld == 0) {
+    var sql_table_leader = "CREATE TABLE lideres (folio_id INT, calificacion INT)";
+    con.query(sql_table_leader, function (err, result) {
+      if (err) throw err;
+       console.log("Table lideres created successfully");
+    });
+  }
+
   if (ce == 0) {
     var sql_table_comentarios = "CREATE TABLE comentarios (folio_id INT, comentario TEXT)";
     con.query(sql_table_comentarios, function (err, result) {
       if (err) throw err;
-      // console.log("Table comentarios created successfully");
+       console.log("Table comentarios created successfully");
     });
   }
 
@@ -321,7 +343,7 @@ function query_builder(state, cond, generales_checks, segment_checks, data1, dat
           } 
 
         } else if (state == 7) {
-          query = "SELECT a1.folio_id, a1.comentario FROM comentarios AS a1 ";
+          query = "SELECT a1.folio_id, a1.comentario, a2. calificacion FROM comentarios AS a1 INNER JOIN lideres AS a2 ON a2.folio_id = a1.folio_id ";
           for (j = 0; j < data2.length; j++) {
             if(generales_checks[j] == data2[j].id && generales_checks[j] != undefined) {
               query += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
@@ -345,6 +367,7 @@ function query_builder(state, cond, generales_checks, segment_checks, data1, dat
           }
 
           query += " WHERE comentario <> '';";
+          // query += " ;";
           
         } else if (state == 8 && cond == 1) {
           query = "SELECT * FROM otras_preguntas;";
@@ -373,6 +396,31 @@ function query_builder(state, cond, generales_checks, segment_checks, data1, dat
           }
 
           query += " WHERE respuesta <> '';";
+        } else if (state == 9) {
+          query = "SELECT a1.area, AVG(a2.respuesta) AS avg_respuesta FROM areas as a1 INNER JOIN areas_respuestas AS a2 ";
+          for (j = 0; j < data2.length; j++) {
+            if(generales_checks[j] == data2[j].id && generales_checks[j] != undefined) {
+              query += " INNER JOIN (SELECT folio_id, respuesta AS general_id_" + (j+1) + " FROM generales_respuestas WHERE general_id = " + (j+1);
+
+              for (k = 0; k < data1.length; k++) {
+                for (q = 0; q < segment_checks.length; q++) {
+                  if(segment_checks[q] == data1[k].respuesta && segment_checks[q] != undefined) {
+                    if(data1[k].general_id == 1) {
+                      query += " AND respuesta = " + data1[k].respuesta;
+                      
+                    } else {
+                      query += " AND respuesta = '" + data1[k].respuesta + "'";
+                      
+                    }
+                  }
+                }
+              }
+              query += ") AS b" + (j+1) + " ON b" + (j+1) + ".folio_id = a2.folio_id";
+              
+            }
+          }
+
+          query += " WHERE a1.id = a2.area_id AND a2.respuesta >= 0 GROUP BY area;";
         }
 
         //console.log(query);
@@ -440,7 +488,7 @@ function parse_global(nr, escala) {
  }, false);
 }
 
-function parse_generales(ng, ns, nc, no, escala) {
+function parse_generales(ng, ns, na, nl, nc, no, escala) {
   csv.parseCSV("./uploads/generales.csv", function(data){
    // console.log(JSON.stringify(data));
    for (i = 0; i < data.length; i++) {
@@ -488,6 +536,49 @@ function parse_generales(ng, ns, nc, no, escala) {
         });
         k++;
       }
+    }
+    if (na > 0) {
+      for (j = 0; j < na; j++) {
+        t = j+1;
+        let resp  = 0;
+        if (escala == 2) {
+          if (data[i][k] == "Excelente") {
+            resp = 100;
+          } else if (data[i][k] == "Bueno") {
+            resp = 80;
+          } else if (data[i][k] == "Regular") {
+            resp = 40;
+          } else if (data[i][k] == "Malo") {
+            resp = 0;
+          }  else {
+            resp = -1;
+          }
+        } else {
+          if (data[i][k] == "Excelente") {
+            resp = 100;
+          } else if (data[i][k] == "Bueno") {
+            resp = 75;
+          } else if (data[i][k] == "Regular") {
+            resp = 25;
+          } else if (data[i][k] == "Malo") {
+            resp = 0;
+          } else {
+            resp = -1;
+          }
+        }
+        var sql_data = "INSERT INTO areas_respuestas (folio_id, area_id, respuesta) VALUES (" + data[i][0] + ", " + t + ", " + resp + ")";
+        con.query(sql_data, function (err, result) {
+          if (err) throw err;
+        });
+        k++;
+      }
+    }
+    if (nl == 0) {
+      var sql_data = "INSERT INTO lideres (folio_id, calificacion) VALUES (" + data[i][0] + ", '" + data[i][k] + "')";
+      con.query(sql_data, function (err, result) {
+        if (err) throw err;
+      });
+      k++;
     }
     if (nc == 0) {
       var sql_data = "INSERT INTO comentarios (folio_id, comentario) VALUES (" + data[i][0] + ", '" + data[i][k] + "')";
@@ -680,7 +771,7 @@ app.post('/editar_clima', upload.array('reactivos_file'), function (req, res) {
       data = value;
       // console.log(data[0].num_reactivos);
       // parse_global(data[0].num_reactivos, data[0].escala, function(err, result)  { if (err) throw err; });
-      parse_generales(data[0].num_generales, data[0].num_servicios, data[0].comentarios, data[0].num_otras, data[0].escala, function(err, result)  { if (err) throw err; });
+      parse_generales(data[0].num_generales, data[0].num_servicios, data[0].num_areas, data[0].lideres, data[0].comentarios, data[0].num_otras, data[0].escala, function(err, result)  { if (err) throw err; });
       let crumb = 'Editar Estudio';
       res.render('editar_clima', {state, crumb, user, type, comp});
     }
@@ -727,9 +818,12 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
     let generales = req.body.generales_input;
     let num_reactivos = parseInt(req.body.reactivos_input);
     let servicios_enabled = parseInt(req.body.servicios_check);
+    let areas_enabled = parseInt(req.body.areas_check);
     let comentarios_enabled = parseInt(req.body.comentarios_check);
+    let leader_enabled = parseInt(req.body.leader_check);
     let otras_enabled = parseInt(req.body.otras_check);
     let arr_servicios = req.body.servicios_input.split(",");
+    let arr_areas = req.body.areas_input.split(",");
     let otras = parseInt(req.body.otras_input);
 
     let empresa = arr_empresa[0];
@@ -751,7 +845,7 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
       if (err) throw err;
     });
 
-    create_tables(dbname, servicios_enabled, comentarios_enabled, otras_enabled, function(err, result)  {
+    create_tables(dbname, servicios_enabled, areas_enabled, leader_enabled, comentarios_enabled, otras_enabled, function(err, result)  {
         if (err) throw err;
     });
 
@@ -759,17 +853,28 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
     var arr_generales = generales.split(",");
     
     let cv = 0;
+    let lead = 0;
+
+    if (leader_enabled == 0) {
+      lead = 1;
+    }
 
     if (comentarios_enabled == 0) {
       cv = 1;
     }
 
     // MISSING CASE CHECK IF OTRAS OR SERVICIOS ARE EMPTY
-
-    var sql_insert_empresa = "INSERT INTO empresa (id, nombre, year, escala, num_reactivos, num_generales, num_servicios, comentarios, num_otras) VALUES (" + empresa_id + ", '" + empresa + "', " + year + ", " + escala + ", " + num_reactivos + ", " + arr_generales.length + ", " + arr_servicios.length + ", " + cv + ", " + otras + ")";
-    con.query(sql_insert_empresa, function (err, result) {
-      if (err) throw err;
-    });
+    if (otras_enabled == 0) {
+      var sql_insert_empresa = "INSERT INTO empresa (id, nombre, year, escala, num_reactivos, num_generales, num_servicios, num_areas, lideres, comentarios, num_otras) VALUES (" + empresa_id + ", '" + empresa + "', " + year + ", " + escala + ", " + num_reactivos + ", " + arr_generales.length + ", " + arr_servicios.length + ", " + arr_areas.length + ", " + lead + ", "+ cv + ", " + otras + ")";
+      con.query(sql_insert_empresa, function (err, result) {
+        if (err) throw err;
+      });
+    } else {
+      var sql_insert_empresa = "INSERT INTO empresa (id, nombre, year, escala, num_reactivos, num_generales, num_servicios, num_areas, lideres, comentarios) VALUES (" + empresa_id + ", '" + empresa + "', " + year + ", " + escala + ", " + num_reactivos + ", " + arr_generales.length + ", " + arr_servicios.length + ", " + arr_areas.length + ", " + lead + ", "+ cv + ")";
+      con.query(sql_insert_empresa, function (err, result) {
+        if (err) throw err;
+      });
+    }
 
     for (i = 0; i < arr_plantas.length; i++) {
       var sql_insert_plantas = "INSERT INTO plantas (planta) VALUES ('" + arr_plantas[i] + "')";
@@ -794,11 +899,20 @@ app.post('/clima', upload.array('reactivos_file'), function (req, res) {
       }
     }
 
+    if (areas_enabled == 0) {
+      for (i = 0; i < arr_areas.length; i++) {
+        var sql_insert_areas = "INSERT INTO areas (area) VALUES ('" + arr_areas[i] + "')";
+        con.query(sql_insert_areas, function (err, result) {
+          if (err) throw err;
+        });
+      }
+    }
+
     parse_reactivos(function(err, result)  { if (err) throw err; });
 
     parse_global(num_reactivos, escala, function(err, result)  { if (err) throw err; });
     
-    parse_generales(arr_generales.length, arr_servicios.length, comentarios_enabled, otras, escala, function(err, result)  { if (err) throw err; });
+    parse_generales(arr_generales.length, arr_servicios.length, arr_areas.length, leader_enabled, comentarios_enabled, otras, escala, function(err, result)  { if (err) throw err; });
     
     if (otras > 0) {
       parse_otras(function(err, result)  { if (err) throw err; });
@@ -1151,6 +1265,16 @@ app.post('/resultados_clima', function (req, res) {
         let crumb = 'Resultados ' + dbname;
         res.render('resultados_clima', {state, crumb, data1, data2, user, type, comp, data_gen, data_seg});
       });
+    });
+  } else if (state == 9) {
+
+    sql = query_builder(state, 0, generales_checks, segment_checks, maind1, maind2);
+
+    con.query(sql, function (err, result, fields) {
+      if (err) throw err;
+      let data = result;
+      let crumb = 'Resultados ' + dbname;
+      res.render('resultados_clima', {state, crumb, data, user, type, comp, data_gen, data_seg});
     });
   }
 
