@@ -201,7 +201,25 @@
             <br>
             <div class="form-row">
               <div class="col-xl-6 col-sm-12 mb-6">
-                <div class="form-group"><h4>Paso 6 (opcional): Comentarios y Otras Preguntas</h4></div>
+                <div class="form-group"><h4>Paso 6 (opcional): Áreas</h4></div>
+                <div class="form-check form-group">
+                  <input type="checkbox" class="form-check-input" name="areas_check" id="areas_check" value="0">
+                  <label class="form-check-label" for="areas_check">Agregar Áreas?</label>
+                </div>
+                <div class="form-group">
+                  <label for="servicios_input">Áreas (separadas por coma, sin caracteres especiales): </label>
+                  <input type="text" class="form-control" name="areas_input" id="areas_input" placeholder="E.g. RH,Compensaciones,etc" disabled>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="form-row">
+              <div class="col-xl-6 col-sm-12 mb-6">
+                <div class="form-group"><h4>Paso 7 (opcional): Líder, Comentarios y Otras Preguntas</h4></div>
+                <div class="form-check form-group">
+                  <input type="checkbox" class="form-check-input" name="leader_check" id="leader_check" value="0">
+                  <label class="form-check-label" for="leader_check">Agregar Líder?</label>
+                </div>
                 <div class="form-check form-group">
                   <input type="checkbox" class="form-check-input" name="comentarios_check" id="comentarios_check" value="0">
                   <label class="form-check-label" for="comentarios_check">Agregar Comentarios?</label>
@@ -223,7 +241,7 @@
             <br>
             <div class="form-row">
               <div class="col-xl-6 col-sm-12 mb-6">
-                <div class="form-group"><h4>Paso 7: Resultados Generales </h4></div>
+                <div class="form-group"><h4>Paso 8: Resultados Generales </h4></div>
                 <div class="form-group">
                   <label for="reactivos_file">Archivo CSV Generales</label>
                   <input type="file" class="form-control-file" name="reactivos_file" id="reactivos_file" multiple>
@@ -233,7 +251,7 @@
             <br>
             <div class="form-row">
               <div class="col-xl-6 col-sm-12 mb-6">
-                <div class="form-group"><h4>Paso 8: Resultado de Encuesta </h4></div>
+                <div class="form-group"><h4>Paso 9: Resultado de Encuesta </h4></div>
                 <div class="form-group">
                   <label for="reactivos_file">Archivo CSV Global</label>
                   <input type="file" class="form-control-file" name="reactivos_file" id="reactivos_file" multiple>
@@ -272,6 +290,10 @@
   <script>
     $('#servicios_check').change(function(){
       $("#servicios_input").prop("disabled", !$(this).is(':checked'));
+    });
+
+    $('#areas_check').change(function(){
+      $("#areas_input").prop("disabled", !$(this).is(':checked'));
     });
 
     $('#otras_check').change(function(){
