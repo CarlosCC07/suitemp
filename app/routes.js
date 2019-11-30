@@ -234,9 +234,9 @@ function query_builder(state, cond, generales_checks, segment_checks, data1, dat
           if (cond == 1) {
             query += " WHERE a1.id = a2.reactivo_id AND respuesta = 100 GROUP BY rubro;";
           } else if (cond == 2) {
-            query += " WHERE a1.id = a2.reactivo_id AND respuesta = 75 OR respuesta = 80 GROUP BY rubro;";
+            query += " WHERE a1.id = a2.reactivo_id AND respuesta = 80 GROUP BY rubro;";
           } else if (cond == 3) {
-            query += " WHERE a1.id = a2.reactivo_id AND respuesta = 25 OR respuesta = 40 GROUP BY rubro;";
+            query += " WHERE a1.id = a2.reactivo_id AND respuesta = 40 GROUP BY rubro;";
           } else if (cond == 4) {
             query += " WHERE a1.id = a2.reactivo_id AND respuesta = 0 GROUP BY rubro;";
           }
@@ -511,10 +511,12 @@ function parse_generales(ng, ns, na, nl, nc, no, escala) {
           } else if (data[i][k] == "Bueno") {
             resp = 80;
           } else if (data[i][k] == "Regular") {
-            resp = 40;
+            resp = 60;
           } else if (data[i][k] == "Malo") {
+            resp = 40;
+          } else if (data[i][k] == "Pesimo") {
             resp = 0;
-          }  else {
+          } else {
             resp = -1;
           }
         } else {
@@ -547,10 +549,12 @@ function parse_generales(ng, ns, na, nl, nc, no, escala) {
           } else if (data[i][k] == "Bueno") {
             resp = 80;
           } else if (data[i][k] == "Regular") {
-            resp = 40;
+            resp = 60;
           } else if (data[i][k] == "Malo") {
+            resp = 40;
+          }  else if (data[i][k] == "Pesimo") {
             resp = 0;
-          }  else {
+          } else {
             resp = -1;
           }
         } else {
