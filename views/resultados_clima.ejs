@@ -367,6 +367,9 @@
           var rubro4 = [{}];
           var rubro5 = [{}];
           var rubro6 = [{}];
+          var rubroG = [0,0,0,0,0,0,0];
+          var hcountG = 0;
+          var temc = 0;
 
           for (k = 0; k < data3.length; k++) {
             if (data3[k].rubro == "Desafío y Oportunidad de Desarrollo") {
@@ -389,6 +392,26 @@
 
             }
           }
+
+          for (j = 0; j < data2.length; j++) {
+            if (data2[j].id == 2) {
+              hcountG += data1[j].hcount;
+              rubroG[1] += Math.round(rubro1[j].avg_resp);
+              rubroG[2] += Math.round(rubro2[j].avg_resp);
+              rubroG[3] += Math.round(rubro3[j].avg_resp);
+              rubroG[4] += Math.round(rubro4[j].avg_resp);
+              rubroG[5] += Math.round(rubro5[j].avg_resp);
+              rubroG[6] += Math.round(rubro6[j].avg_resp);
+              temc += 1;
+            }
+          }
+          rubroG[1] = Math.round(rubroG[1]/temc);
+          rubroG[2] = Math.round(rubroG[2]/temc);
+          rubroG[3] = Math.round(rubroG[3]/temc);
+          rubroG[4] = Math.round(rubroG[4]/temc);
+          rubroG[5] = Math.round(rubroG[5]/temc);
+          rubroG[6] = Math.round(rubroG[6]/temc);
+          rubroG[0] = Math.round((rubroG[1]+rubroG[2]+rubroG[3]+rubroG[4]+rubroG[5]+rubroG[6])/6);
 
           %>
           <div class="row">
@@ -419,6 +442,46 @@
             </div>
           </div>
         </div>
+
+            <div class="card mb-3">
+              <div class="card-header">Satisfacción Global</div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-bordered display" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>Head Count</th>
+                        <th>Global</th>
+                        <th>Rubro 1</th>
+                        <th>Rubro 2</th>
+                        <th>Rubro 3</th>
+                        <th>Rubro 4</th>
+                        <th>Rubro 5</th>
+                        <th>Rubro 6</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><%= hcountG %></td>
+                        <% if (rubroG[0] >= 70) { %> <td class="text-center type1"><%= rubroG[0] %></td> <% } else if (rubroG[0] < 70 && rubroG[0] >= 60) { %> <td class="text-center type2"><%= rubroG[0] %></td> <% } else if (rubroG[0] < 60 && rubroG[0] >= 50) { %> <td class="text-center type3"><%= rubroG[0] %></td> <% } else if (rubroG[0] < 50) { %> <td class="text-center type4"><%= rubroG[0] %></td> <% } else { %> <td class="text-center"><%= rubroG[0] %></td> <% } %>
+
+                        <% if (rubroG[1] >= 70) { %> <td class="text-center type1"><%= rubroG[1] %></td> <% } else if (rubroG[1] < 70 && rubroG[1] >= 60) { %> <td class="text-center type2"><%= rubroG[1] %></td> <% } else if (rubroG[1] < 60 && rubroG[1] >= 50) { %> <td class="text-center type3"><%= rubroG[1] %></td> <% } else if (rubroG[1] < 50) { %> <td class="text-center type4"><%= rubroG[1] %></td> <% } else { %> <td class="text-center"><%= rubroG[1] %></td> <% } %>
+
+                        <% if (rubroG[2] >= 70) { %> <td class="text-center type1"><%= rubroG[2] %></td> <% } else if (rubroG[2] < 70 && rubroG[2] >= 60) { %> <td class="text-center type2"><%= rubroG[2] %></td> <% } else if (rubroG[2] < 60 && rubroG[2] >= 50) { %> <td class="text-center type3"><%= rubroG[2] %></td> <% } else if (rubroG[2] < 50) { %> <td class="text-center type4"><%= rubroG[2] %></td> <% } else { %> <td class="text-center"><%= rubroG[2] %></td> <% } %>
+
+                        <% if (rubroG[3] >= 70) { %> <td class="text-center type1"><%= rubroG[3] %></td> <% } else if (rubroG[3] < 70 && rubroG[3] >= 60) { %> <td class="text-center type2"><%= rubroG[3] %></td> <% } else if (rubroG[3] < 60 && rubroG[3] >= 50) { %> <td class="text-center type3"><%= rubroG[3] %></td> <% } else if (rubroG[3] < 50) { %> <td class="text-center type4"><%= rubroG[3] %></td> <% } else { %> <td class="text-center"><%= rubroG[3] %></td> <% } %>
+
+                        <% if (rubroG[4] >= 70) { %> <td class="text-center type1"><%= rubroG[4] %></td> <% } else if (rubroG[4] < 70 && rubroG[4] >= 60) { %> <td class="text-center type2"><%= rubroG[4] %></td> <% } else if (rubroG[4] < 60 && rubroG[4] >= 50) { %> <td class="text-center type3"><%= rubroG[4] %></td> <% } else if (rubroG[4] < 50) { %> <td class="text-center type4"><%= rubroG[4] %></td> <% } else { %> <td class="text-center"><%= rubroG[4] %></td> <% } %>
+
+                        <% if (rubroG[5] >= 70) { %> <td class="text-center type1"><%= rubroG[5] %></td> <% } else if (rubroG[5] < 70 && rubroG[5] >= 60) { %> <td class="text-center type2"><%= rubroG[5] %></td> <% } else if (rubroG[5] < 60 && rubroG[5] >= 50) { %> <td class="text-center type3"><%= rubroG[5] %></td> <% } else if (rubroG[5] < 50) { %> <td class="text-center type4"><%= rubroG[5] %></td> <% } else { %> <td class="text-center"><%= rubroG[5] %></td> <% } %>
+
+                        <% if (rubroG[6] >= 70) { %> <td class="text-center type1"><%= rubroG[6] %></td> <% } else if (rubroG[6] < 70 && rubroG[6] >= 60) { %> <td class="text-center type2"><%= rubroG[6] %></td> <% } else if (rubroG[6] < 60 && rubroG[6] >= 50) { %> <td class="text-center type3"><%= rubroG[6] %></td> <% } else if (rubroG[6] < 50) { %> <td class="text-center type4"><%= rubroG[6] %></td> <% } else { %> <td class="text-center"><%= rubroG[6] %></td> <% } %>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
 
             <% for (i = 1; i < data4.length; i++) { %>
             <div class="card mb-3">
@@ -632,6 +695,7 @@
             </div>
           </div>
         </div>
+        <!--
         <div class="card mb-3">
             <div class="card-header">
               Líderes</div>
@@ -660,7 +724,7 @@
               </div>
             </div>
           </div>
-
+        -->
           <div class="card mb-3">
             <div class="card-header">
               Comentarios</div>
